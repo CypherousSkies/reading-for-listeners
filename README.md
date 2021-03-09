@@ -3,4 +3,6 @@ I have issues reading pdfs and listening to them helps me out massively! So I'm 
 In the future, this'll be a fun server that'll do the hard work, but for now, it'll just be a python/bash project.
 This is a small personal project, so there won't be regular updates *per se*, but when I have time I'll push what I've got.
 
+Remember to --recurse-submodules when you clone.
+
 Nothing I'm doing here is new or especially interesting (right now) so feel free to use this for whatever.
