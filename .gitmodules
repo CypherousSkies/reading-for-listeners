@@ -4,3 +4,6 @@
 [submodule "OCRmyPDF"]
 	path = OCRmyPDF
 	url = https://github.com/jbarlow83/OCRmyPDF.git
+[submodule "transformers"]
+	path = transformers
+	url = git@github.com:huggingface/transformers.git
