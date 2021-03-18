@@ -1,9 +1,6 @@
 [submodule "TTS"]
 	path = TTS
 	url = https://github.com/mozilla/TTS.git
-[submodule "OCRmyPDF"]
-	path = OCRmyPDF
-	url = https://github.com/jbarlow83/OCRmyPDF.git
-[submodule "transformers"]
-	path = transformers
-	url = git@github.com:huggingface/transformers.git
+[submodule "nltk"]
+	path = nltk
+	url = git@github.com:nltk/nltk.git
