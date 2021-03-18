@@ -5,4 +5,6 @@ This is a small personal project, so there won't be regular updates *per se*, bu
 
 Remember to --recurse-submodules when you clone.
 
-Nothing I'm doing here is new or especially interesting (right now) so feel free to use this for whatever.
+## The Pipeline
+input.pdf -> ocrmypdf (ghostscript->tesseract-ocr) -> preprocessing (regex) -> ocr correction (BERT) -> postprocessing (regex) -> text to speech (Mozilla TTS) -> wav to mp3 (pydub~ffmpeg) -> out.mp3
+The slowest parts will almost certainly be BERT and TTS, so it'd be nice to train student models for those when I have resources.

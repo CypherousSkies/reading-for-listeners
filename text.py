@@ -4,13 +4,77 @@ import re
 import nltk
 from enchant.checker import SpellChecker
 from difflib import SequenceMatcher
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, pipeline
 from pdftotext import PDF
 import os
 import numpy as np
 
 nltk.download('popular')
 print("> NLTK setup")
+
+def _need_ocr(inpdf,minwords):
+    with open(inpdf,"rb") as f:
+        pdf = PDF(f)
+    text = ' '.join(pdf)
+    word_list = text.replace(',','').replace('\'','').replace('.','').lower().split()
+    if len(word_list) > minwords:
+        return False, text
+    else:
+        return True, None
+    
+def _get_text(inpdf,sesspath,language,unpaper_args,minwords):
+    force_ocr, prelim_text = _need_ocr(inpdf,minwords)
+    ocr(inpdf,f"{sesspath}/tmp.pdf",sidecar=f"{sesspath}/tmp.txt",language=language,deskew=force_ocr,rotate_pages=force_ocr,remove_background=force_ocr,clean=force_ocr,unpaper_args=unpaper_args,redo_ocr=(not force_ocr),force_ocr=force_ocr)
+    with open(f"{sesspath}/tmp.txt","rt") as text:
+        return text.read(), prelim_text
+
+# from https://stackoverflow.com/a/16826935
+def _remove_citations(self,text):
+    author = "(?:[A-Z][A-Za-z'`-]+)"
+    etal = "(?:et al.?)"
+    additional = "(?:,? (?:(?:and |& )?" + author + "|" + etal + "))"
+    year_num = "(?:19|20)[0-9][0-9]"
+    page_num = "(?:, p.? [0-9]+)?"  # Always optional
+    year = "(?:, *"+year_num+page_num+"| *\("+year_num+page_num+"\))"
+    regex = "(" + author + additional+"*" + year + ")"
+    return re.sub(regex,'',text)
+
+# from Ravi Ilango's Medium post
+def _get_personslist(self,text):
+    personslist=[]
+    for sent in nltk.sent_tokenize(text):
+        for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
+            if isinstance(chunk, nltk.tree.Tree) and chunk.label() == 'PERSON':
+                personslist.insert(0,(chunk.leaves()[0][0]))
+    return list(set(personslist))
+
+def _cleanup(self,text):
+    rep = { '\n': ' ', '\\': ' ', '\"': '"', '-': ' ', '"': ' " ', 
+                    '"': ' " ', '"': ' " ', ',':' , ', '.':' . ', '!':' ! ', 
+                            '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', 
+                                    '(': ' ( ', ')': ' ) ', "s'": "s '"}
+    rep = dict((re.escape(k),v) for k,v in rep.items())
+    pattern = re.compile("|".join(rep.keys()))
+    return pattern.sub(lambda m: rep[re.escape(m.group(0))],text)
+
+
+class TP2:
+    def __init__(self,sc_lang="en_US"):
+        self.unmask = pipeline("fill-mask")
+        self.sc = SpellChecker(sc_lang)
+        print("> language completion model loaded")
+    def loadtext(self,inpdf,path,minwords=10,ocr_lang=['eng'],unpaper_args=None,remove_citations=True):
+        print(f"> loading {inpdf}")
+        ocrtxt, pretxt = _get_text(inpdf,path,ocr_lang,unpaper_args,remove_citations)
+        os.remove(f'{path}/tmp.pdf')
+        os.remove(f'{path}/tmp.txt')
+        os.remove(inpdf)
+        txts = [ocrtxt] + [pretxt] if pretxt is not None else []
+        print(f"> processing {len(txts)}")
+        for txt in txts:
+            ft,ot,sw = self._preprocess(text,remove_citations)
+    def _preprocess(self,text,remove_citations):
+
 
 class TextProcessor(object):
     def __init__(self,sc_language="en_US",bert_model="distilbert-base-uncased"):
@@ -22,7 +86,7 @@ class TextProcessor(object):
     # take input pdf (inpdf) plus a bunch of settings and output a the fixed output (of both the new ocr and existing text layer)
     def loadtext(self,inpdf,sesspath,minwords=10,ocr_lang=['eng'],unpaper_args=None,remove_citations=True):
         print(f"> loading {inpdf}")
-        textocr, pretext = self._get_text(inpdf,sesspath,ocr_lang,unpaper_args,minwords)
+        textocr, pretext = _get_text(inpdf,sesspath,ocr_lang,unpaper_args,minwords)
         print(textocr[100:150],"---",pretext[100:150])
         os.remove(f'{sesspath}/tmp.pdf')
         os.remove(f'{sesspath}/tmp.txt')
@@ -35,51 +99,6 @@ class TextProcessor(object):
         if len(texts) == 1:
             return text[0]
         return text[0], text[1]
-
-    def _need_ocr(self,inpdf,minwords):
-        with open(inpdf,"rb") as f:
-            pdf = PDF(f)
-        text = ' '.join(pdf)
-        word_list = text.replace(',','').replace('\'','').replace('.','').lower().split()
-        if len(word_list) > minwords:
-            return False, text
-        else:
-            return True, None
-
-    def _get_text(self,inpdf,sesspath,language,unpaper_args,minwords):
-        force_ocr, prelim_text = self._need_ocr(inpdf,minwords)
-        ocr(inpdf,f"{sesspath}/tmp.pdf",sidecar=f"{sesspath}/tmp.txt",language=language,deskew=force_ocr,rotate_pages=force_ocr,remove_background=force_ocr,clean=force_ocr,unpaper_args=unpaper_args,redo_ocr=(not force_ocr),force_ocr=force_ocr)
-        with open(f"{sesspath}/tmp.txt","rt") as text:
-            return text.read(), prelim_text
-
-    # from https://stackoverflow.com/a/16826935
-    def _remove_citations(self,text):
-        author = "(?:[A-Z][A-Za-z'`-]+)"
-        etal = "(?:et al.?)"
-        additional = "(?:,? (?:(?:and |& )?" + author + "|" + etal + "))"
-        year_num = "(?:19|20)[0-9][0-9]"
-        page_num = "(?:, p.? [0-9]+)?"  # Always optional
-        year = "(?:, *"+year_num+page_num+"| *\("+year_num+page_num+"\))"
-        regex = "(" + author + additional+"*" + year + ")"
-        return re.sub(regex,'',text)
-
-    # from Ravi Ilango's Medium post
-    def _get_personslist(self,text):
-        personslist=[]
-        for sent in nltk.sent_tokenize(text):
-            for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
-                if isinstance(chunk, nltk.tree.Tree) and chunk.label() == 'PERSON':
-                    personslist.insert(0,(chunk.leaves()[0][0]))
-        return list(set(personslist))
-
-    def _cleanup(self,text):
-        rep = { '\n': ' ', '\\': ' ', '\"': '"', '-': ' ', '"': ' " ', 
-                        '"': ' " ', '"': ' " ', ',':' , ', '.':' . ', '!':' ! ', 
-                                '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', 
-                                        '(': ' ( ', ')': ' ) ', "s'": "s '"}
-        rep = dict((re.escape(k),v) for k,v in rep.items())
-        pattern = re.compile("|".join(rep.keys()))
-        return pattern.sub(lambda m: rep[re.escape(m.group(0))],text)
 
     def _preprocess(self,text,remove_citations): 
         if remove_citations:
