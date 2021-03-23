@@ -5,8 +5,14 @@ This is a small personal project, so there won't be regular updates *per se*, bu
 
 Remember to --recurse-submodules when you clone, or get Mozilla TTS some other way.
 
+## Requirements
+Currently only tested on linux (fedora and ubuntu). On ubuntu, run
+`sudo apt install -y python3 espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
+and on any platform (preferably in a virtualenv):
+`pip install ocrmypdf transformers TTS pydub nltk pyenchant`
+
 ## What works now
-readaloud.sh contains the barebones of a cli workflow (assuming you've installed ffmpeg, ocrmypdf, TTS, espeak, and you're runing linux), although the outputs of pdftotext and ocrmypdf are often mediocre at best, so this still requires a lot of person-time to edit so that Mozilla TTS doesn't freak out (if you get weird errors, be sure to remove elipses, double punctuation e.g. ?!, and special characters like @ and #).
+readaloud.sh contains the barebones of a cli workflow, although the outputs of pdftotext and ocrmypdf are often mediocre at best, so this still requires a lot of person-time to edit so that Mozilla TTS doesn't freak out (if you get weird errors, be sure to remove elipses, double punctuation e.g. ?!, and special characters like @ and #).
 
 ## Automated Pipeline
 When everything works, this'll probably be how it fits together:

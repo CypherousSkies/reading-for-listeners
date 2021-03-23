@@ -20,7 +20,7 @@ def _need_ocr(inpdf,minwords):
     if len(word_list) > minwords:
         return False, text
     else:
-        return True, None
+        return True, ""
     
 def _get_text(inpdf,sesspath,language,unpaper_args,minwords):
     force_ocr, prelim_text = _need_ocr(inpdf,minwords)
@@ -29,7 +29,7 @@ def _get_text(inpdf,sesspath,language,unpaper_args,minwords):
         return text.read(), prelim_text
 
 # from https://stackoverflow.com/a/16826935
-def _remove_citations(self,text):
+def _remove_citations(text):
     author = "(?:[A-Z][A-Za-z'`-]+)"
     etal = "(?:et al.?)"
     additional = "(?:,? (?:(?:and |& )?" + author + "|" + etal + "))"
@@ -40,7 +40,8 @@ def _remove_citations(self,text):
     return re.sub(regex,'',text)
 
 # from Ravi Ilango's Medium post
-def _get_personslist(self,text):
+def _get_personslist(text):
+    print("> removing names and places")
     personslist=[]
     for sent in nltk.sent_tokenize(text):
         for chunk in nltk.ne_chunk(nltk.pos_tag(nltk.word_tokenize(sent))):
@@ -48,7 +49,7 @@ def _get_personslist(self,text):
                 personslist.insert(0,(chunk.leaves()[0][0]))
     return list(set(personslist))
 
-def _cleanup(self,text):
+def _cleanup(text):
     rep = { '\n': ' ', '\\': ' ', '\"': '"', '-': ' ', '"': ' " ', 
                     '"': ' " ', '"': ' " ', ',':' , ', '.':' . ', '!':' ! ', 
                             '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', 
@@ -68,13 +69,47 @@ class TP2:
         ocrtxt, pretxt = _get_text(inpdf,path,ocr_lang,unpaper_args,remove_citations)
         os.remove(f'{path}/tmp.pdf')
         os.remove(f'{path}/tmp.txt')
-        os.remove(inpdf)
-        txts = [ocrtxt] + [pretxt] if pretxt is not None else []
+        #os.remove(inpdf)
+        txts = [ocrtxt] + [pretxt] if pretxt != "" else []
         print(f"> processing {len(txts)}")
         for txt in txts:
-            ft,ot,sw = self._preprocess(text,remove_citations)
-    def _preprocess(self,text,remove_citations):
-
+            ft,ot,sw = self._preprocess(txt,remove_citations)
+            txt = self._correct_words(ft,ot,sw)
+        if len(txts)>1:
+            return txts[0], txts[1]
+        return txts[0]
+    def _preprocess(self,text,remove_citations): 
+        if remove_citations:
+            text = _remove_citations(text)
+        text = text.replace('...',';')
+        text = text.replace('. . .',';')
+        original_text = text
+        text = _cleanup(text)
+        personslist = _get_personslist(text)
+        ignorewords = personslist + ["!", ",", ".", "\"", "?", '(', ')', '*', "'"]
+        words = text.split()
+        incorrectwords = [" "+w+" " for w in words if not self.sc.check(w) and w not in ignorewords]
+        suggestedwords = [self.sc.suggest(w) for w in incorrectwords]
+        for w in incorrectwords:
+            text = text.replace(w, self.unmask.tokenizer.mask_token)
+            original_text = original_text.replace(w, self.unmask.tokenizer.mask_token)
+        return text, original_text, suggestedwords
+    def _correct_words(self,txt,otxt,sw):
+        print(f"> predicting {len(sw)} words")
+        predictions = self.unmask(txt)
+        for i,pred in enumerate(predictions):
+            preds = [p.token_str for p in pred]
+            suggs = sw[i]
+            simmax = 0
+            out=''
+            for p in preds:
+                for s in suggs:
+                    r = SequenceMatcher(None,p,s).ratio()
+                    if r is not None and r > simmax:
+                        simmax = r
+                        out = p
+            otxt = otxt.replace(self.unmask.tokenizer.mask_token,out,1)
+        return otxt
 
 class TextProcessor(object):
     def __init__(self,sc_language="en_US",bert_model="distilbert-base-uncased"):
