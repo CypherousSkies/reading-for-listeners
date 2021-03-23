@@ -6,8 +6,8 @@ This is a small personal project, so there won't be regular updates *per se*, bu
 Remember to --recurse-submodules when you clone, or get Mozilla TTS some other way.
 
 ## Requirements
-Currently only tested on linux (fedora and ubuntu). On ubuntu, run
-`sudo apt install -y python3 espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
+Currently only tested on linux (fedora and ubuntu). On debian/ubuntu, run
+`sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
 and on any platform (preferably in a virtualenv):
 `pip install ocrmypdf transformers TTS pydub nltk pyenchant`
 

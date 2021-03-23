@@ -1,5 +1,5 @@
 import text
-tf = text.TP2()
+tf = text.TextProcessor()
 inpdf = "in/ds.pdf"
 sesspath = "in/"
 ot,pt = tf.loadtext(inpdf,sesspath)
