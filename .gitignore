@@ -3,6 +3,9 @@ in/*
 # Output folder
 out/*
 
+# As much as i'd love to put pdfs onto github, they're not my content
+*.pdf
+
 #Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,10 +1,11 @@
 import text
 tf = text.TextProcessor()
-inpdf = "in/ds.pdf"
+inpdf = "mm1.pdf"
 sesspath = "in/"
-ot,pt = tf.loadtext(inpdf,sesspath)
-with open("out/dso.txt","wt") as f:
-    f.write(ot)
-with open("out/dsp.txt","wt") as f:
-    f.write(pt)
+txts = tf.loadtext(inpdf,sesspath)
+print(txts)
+with open("out/dso.txt","a") as f:
+    f.write(txts[0])
+#with open("out/dsp.txt","w") as f:
+#    f.write(txts[1])
 print("Done")

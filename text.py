@@ -1,13 +1,16 @@
 from ocrmypdf import ocr
-import torch
+import tensorflow as tf
+import pandas as pd
+from tqdm import tqdm
 import re
 import nltk
 from enchant.checker import SpellChecker
 from difflib import SequenceMatcher
-from transformers import AutoTokenizer, AutoModelForMaskedLM, pipeline
+from transformers import AutoTokenizer, TFAutoModelForMaskedLM, pipeline
 from pdftotext import PDF
 import os
 import numpy as np
+from keras.preprocessing.sequence import pad_sequences
 
 nltk.download('popular')
 print("> NLTK setup")
@@ -17,6 +20,7 @@ def _need_ocr(inpdf,minwords):
         pdf = PDF(f)
     text = ' '.join(pdf)
     word_list = text.replace(',','').replace('\'','').replace('.','').lower().split()
+    return True, text
     if len(word_list) > minwords:
         return False, text
     else:
@@ -50,16 +54,16 @@ def _get_personslist(text):
     return list(set(personslist))
 
 def _cleanup(text):
-    rep = { '\n': ' ', '\\': ' ', '\"': '"', '-': ' ', '"': ' " ', '"': ' " ', '"': ' " ', ',':' , ', '.':' . ', '!':' ! ', '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', '(': ' ( ', ')': ' ) ', "s'": "s '", ":": " "}
+    rep = { '\n': ' ', '\\': ' ', '\"': '"', '-': ' ', '"': ' " ', '"': ' " ', '"': ' " ', ',':' , ', '.':' . ', '!':' ! ', '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', '(': ' ( ', ')': ' ) ', "s'": "s '", ":": " ", "[":' [ ', "]":' ] ',"{":" { ","}":" } "}
     rep = dict((re.escape(k),v) for k,v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
     return pattern.sub(lambda m: rep[re.escape(m.group(0))],text)
 
 class TextProcessor(object):
-    def __init__(self,sc_language="en_US",bert_model="distilbert-base-uncased"):
+    def __init__(self,sc_language="en_US",bert_model="distilbert-base-multilingual-cased"):
         self.sc = SpellChecker(sc_language)
         self.tokenizer = AutoTokenizer.from_pretrained(bert_model)
-        self.model = AutoModelForMaskedLM.from_pretrained(bert_model)
+        self.model = TFAutoModelForMaskedLM.from_pretrained(bert_model)
         print("> BERT loaded")
 
     # take input pdf (inpdf) plus a bunch of settings and output a the fixed output (of both the new ocr and existing text layer)
@@ -75,9 +79,9 @@ class TextProcessor(object):
         for text in texts:
             ft,ot,sw = self._preprocess(text,remove_citations,minletter)
             text = self._predict_words(ft,ot,sw)
-        if len(texts) == 1:
-            return text[0]
-        return text[0], text[1]
+        #if len(texts) == 1:
+        #    return text[0]
+        return text
 
     def _preprocess(self,text,remove_citations,minletter): 
         if remove_citations:
@@ -85,16 +89,18 @@ class TextProcessor(object):
         text = text.replace('...',';')
         text = text.replace('. . .',';')
         text = text.replace('®','')
+        text = text.replace('“','\"')
+        text = text.replace('”',"\"")
         text = re.sub(r'https?://\S+','',text)
         original_text = text#.copy()
         text = _cleanup(text)
         personslist = _get_personslist(text)
         ignorewords = personslist + ["!", ",", ".", "\"", "?", '(', ')', '*', "'"]
         words = text.split()
-        incorrectwords = [w for w in words if not self.sc.check(w) and w not in ignorewords and len(w) >= minletter]
+        incorrectwords = list(set([w for w in words if not self.sc.check(w) and w not in ignorewords and len(w) >= minletter]))
+        print(incorrectwords)
         suggestedwords = []
         mask = self.tokenizer.mask_token
-        print(incorrectwords)
         suggestedwords = self._gen_suggested(text,incorrectwords)
         print(suggestedwords)
         for w in incorrectwords:
@@ -102,52 +108,57 @@ class TextProcessor(object):
             original_text = original_text.replace(w, mask)
         return text, original_text, suggestedwords
     def _gen_suggested(self,text,ws):
-        print(ws)
-        suggested = self.sc.suggest(ws[0])
         sw = []
+        if ws == []:
+            return sw
+        suggested = self.sc.suggest(ws[0])
         for txt in text.split(ws[0])[:-1]:
-            sw.append([suggested])
-            print([l for l in self._gen_suggested(txt,ws[1:])])
+            sw.append(suggested)
+            for l in self._gen_suggested(txt,ws[1:]):
+                if l is not []:
+                    sw.append(l)
+        for l in self._gen_suggested(text.split(ws[0])[-1],ws[1:]):
+            if l is not []:
+                sw.append(l)
         return sw
+    #from https://towardsdatascience.com/tensorflow-and-transformers-df6fceaf57cc
+    def _tokenize(text):
+        sensplitter = nltk.data.load('tokenizers/punkt/english.pickle')
+        sentences = senssplitter.tokenize(text.strip())
+        print(f"> split {len(sentences)}")
+        ids = np.zeros(len(sentences),self.seq_len)
+        mask = np.zeros(len(sentences),self.seq_len)
+        for i,sentence in enumerate(tqdm(sentences)):
+            tokens = self.tokenizer.encode_plus(sentence,max_length=self.seq_len,
+                    truncation=True,padding='max_length',
+                    add_special_tokens=True,return_attention_mask=True,
+                    return_token_type_ids=False,return_tensors='tf')
+            ids[i,:] = tokens['input_ids']
+            mask[i,:] = tokens['attention_mask']
+        return ids,mask
     def _predict_words(self,text_filtered, text_original, suggestedwords):
         print(f"> predicting {len(suggestedwords)} words")
         # BERT time
-        tokenized_text = self.tokenizer.tokenize(text_filtered,return_tensors='pt')
-        indexed_tokens = self.tokenizer.convert_tokens_to_ids(tokenized_text)
-        maskids = [i for i,e in enumerate(tokenized_text) if e == self.tokenizer.mask_token]
-        # segment tensors
-        segs =    [i for i,e in enumerate(tokenized_text) if e == '.']
-        segids = []
-        prev = -1
-        for k,s in enumerate(segs):
-            segids=segids+[k]*(s-prev)
-            prev=s
-        segids=segids+[len(segs)]*(len(tokenized_text)-len(segids))
-        seg_tensors=torch.tensor([segids])
-        # prep inputs
-        tokens_tensor = torch.tensor([indexed_tokens])
-        with torch.no_grad():
-            predictions = self.model(tokens_tensor)[0]
-        #predictions = self.model(**tokens_tensor)
+        input_ids,mask = self._tokenize(text_filtered)
+        predictions = self.model(input_ids,attention_mask=mask)[0]
+        print(predictions)
+        print("> done predicting")
         # refine BERT predictions with spellcheck
-        print(len(suggestedwords))
-        print(len(maskids))
         for i,m in enumerate(maskids):
             preds = torch.topk(predictions[0][m],k=50)
-            #indices = [j for l in preds.indices.tolist() for j in l]
-            #print(preds)
             indices = preds.indices.tolist()
-            #print(indices)
             list1 = self.tokenizer.convert_ids_to_tokens(indices)
-            #print(list1)
             list2 = suggestedwords[i]
+            #print(list1)
+            #print(list2)
             simmax=0
-            predicted_token=''
-            for word1 in list1:
+            predicted_token=list1[0]
+            for word1 in list1[1:]:
                 for word2 in list2:
                     s = SequenceMatcher(None,word1,word2).ratio()
                     if s is not None and s > simmax:
                         simmax = s
                         predicted_token = word1
             text_original = text_original.replace(self.tokenizer.mask_token,predicted_token,1)
+        print("> done processing text")
         return text_original
