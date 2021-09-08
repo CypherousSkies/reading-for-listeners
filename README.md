@@ -3,8 +3,6 @@ I have issues reading pdfs and listening to them helps me out massively! So I'm 
 In the future, this'll be a fun server that'll do the hard work, but for now, it'll just be a python/bash project.
 This is a small personal project, so there won't be regular updates *per se*, but when I have time I'll push what I've got.
 
-Remember to --recurse-submodules when you clone, or get Mozilla TTS some other way.
-
 ## Requirements
 Currently only tested on linux (fedora and ubuntu). On debian/ubuntu, run
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
