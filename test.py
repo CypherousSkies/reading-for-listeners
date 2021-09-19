@@ -1,6 +1,6 @@
 import text
 tf = text.TextProcessor()
-inpdf = "mm1.pdf"
+inpdf = "Red.pdf"
 sesspath = "in/"
 txts = tf.loadtext(inpdf,sesspath)
 print(txts)
