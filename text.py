@@ -19,16 +19,17 @@ class TextProcessor:
         self.sc = SpellChecker(distance=1,language=sc_langs)
         print("> BERT initialized")
     # get and correct text
-    def loadtext(self,filename):
-        text = self._load(filename)
+    def loadtext(self,filename,sesspath,force=True):
+        text = self._load(filename,sesspath,force)
         text,text_original,incorrect = self._preprocess(text)
         text = self._correct(text,text_original,incorrect)
-        os.remove("tmp.pdf")
-        os.remove("tmp.txt")
+        os.remove(sesspath+"/tmp.pdf")
+        os.remove(sesspath+"/tmp.txt")
         return text
-    def _load(self,filename):
-        ocr(filename,"tmp.pdf",sidecar="tmp.txt",deskew=True,rotate_pages=True,remove_background=True,clean=True,force_ocr=True)
-        with open("tmp.txt","r") as txt:
+    def _load(self,filename,sesspath,force):
+        txt = sesspath+"/tmp.txt"
+        ocr(filename,sesspath+"/tmp.pdf",sidecar=txt,redo_ocr=(not force),deskew=force,rotate_pages=force,remove_background=force,clean=force,force_ocr=force)
+        with open(sesspath+"/tmp.txt","r") as txt:
             text = txt.read()
         print("> OCR complete")
         return text
