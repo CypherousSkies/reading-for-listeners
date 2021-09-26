@@ -7,12 +7,9 @@ This is a small personal project, so there won't be regular updates *per se*, bu
 Currently only tested on linux (fedora and ubuntu). On debian/ubuntu, run
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
 and on any platform (preferably in a virtualenv):
-`pip install -U pip setuptools==57 wheel`
-`pip install justpy`
-`pip install -U setuptools`
-`pip install ocrmypdf transformers TTS pydub nltk pyspellchecker`
+`pip install ocrmypdf transformers TTS pydub nltk pyspellchecker atlastk`
 And get pytorch
-Takes ~5-6GB :(
+Takes ~2-3GB :/
 
 ## What works now
 readaloud.sh contains the barebones of a cli workflow, although the outputs of pdftotext and ocrmypdf are often mediocre at best, so this still requires a lot of person-time to edit so that Mozilla TTS doesn't freak out (if you get weird errors, be sure to remove elipses, double punctuation e.g. ?!, and special characters like @ and #).
