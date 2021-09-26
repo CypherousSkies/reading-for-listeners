@@ -12,13 +12,20 @@ and on any platform (preferably in a virtualenv):
 `pip install -U setuptools`
 `pip install ocrmypdf transformers TTS pydub nltk pyspellchecker`
 And get pytorch
+Takes ~5-6GB :(
 
 ## What works now
 readaloud.sh contains the barebones of a cli workflow, although the outputs of pdftotext and ocrmypdf are often mediocre at best, so this still requires a lot of person-time to edit so that Mozilla TTS doesn't freak out (if you get weird errors, be sure to remove elipses, double punctuation e.g. ?!, and special characters like @ and #).
 
 ## Automated Pipeline
 When everything works, this'll probably be how it fits together:
-input.pdf -> ocrmypdf (ghostscript->tesseract-ocr) -> preprocessing (regex) -> ocr correction (BERT) -> postprocessing (regex) -> text to speech (Mozilla TTS) -> wav to mp3 (pydub~ffmpeg) -> out.mp3
+input.pdf -> ocrmypdf (ghostscript->unpaper->tesseract-ocr) -> preprocessing (regex) -> ocr correction (BERT) -> postprocessing (regex) -> text to speech (Mozilla TTS) -> wav to mp3 (pydub~ffmpeg) -> out.mp3
 The slowest parts will almost certainly be BERT and TTS, so it'd be nice to train student models for those when I have resources.
 Hopefully this can all be controlled by a nice simple ui.
 Hopefully.
+
+## Note to future me
+Implement epub pipeline: input.epub -> preprocessing (regex) -> tts (Mozilla) -> wav to mp3 -> out.mp3
+Implement txt pipeline: input.txt -> tts -> wav2mp3 -> out.mp3
+Improve BERT results with BART summarizer (bert can only take 512 tokens, so sumarize text before the sentence with [MASK] to improve)
+Add summary to start of spoken texts
