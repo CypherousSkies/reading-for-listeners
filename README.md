@@ -12,8 +12,8 @@ And get pytorch
 Takes ~2-3GB :/
 
 ## What works now
- - readaloud.sh contains the barebones of a cli workflow, although the outputs of pdftotext and ocrmypdf are often mediocre at best, so this still requires a lot of person-time to edit so that Mozilla TTS doesn't freak out (if you get weird errors, be sure to remove elipses, double punctuation e.g. ?!, and special characters like @ and #).
  - test.py can turn all pdfs in a folder called in/ into mp3s in a folder called out/, with the full ocr->BERT->tts pipeline (it is advisable to run fixswap.sh or otherwise get lots of memory for this as longer texts can get quite large)
+ - readaloud.sh contains the barebones of a cli workflow, although the outputs of pdftotext and ocrmypdf are often mediocre at best, so this still requires a lot of person-time to edit so that Mozilla TTS doesn't freak out (if you get weird errors, be sure to remove elipses, double punctuation e.g. ?!, and special characters like @ and #).
 
 ## Automated Pipeline
 When everything works, this'll probably be how it fits together:

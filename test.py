@@ -4,17 +4,24 @@ from pydub import AudioSegment
 from text import TextProcessor
 import numpy as np
 import os
+import time
+start_time = time.time()
+
 os.environ["TOKENIZERS_PARALLELISM"] = "False"
 tp = TextProcessor()
 sesspath = "in/"
 files = [f for f in os.listdir(sesspath) if f[-3:]=='pdf']
 texts = [[] for f in files]
+wordcount = 0
 print(f"> Reading {files}")
 for i,filename in enumerate(files):
     text = [tp.loadtext(filename,sesspath,force=a) for a in [True,False]]
-    text = [t for t in text if len(t)>100]
+    text = [t for t in text if len(t.split(" "))>100]
     if len(text) == 1:
         text = text[0]
+        wordcount += len(text.split(" "))
+    else:
+        wordcount += sum([len(t.split(" ")) for t in text])
     texts[i] = text
 del tp
 print(f"> Done text preprocessing")
@@ -42,4 +49,4 @@ for text,name in zip(texts,files):
             tts(t,f+name,"out/")
     else:
         tts(text,name,"out/")
-print("> Done batch")
+print(f"> Read {wordcount} words in {time.time()-start_time}")
