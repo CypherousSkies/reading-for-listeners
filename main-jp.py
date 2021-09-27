@@ -8,7 +8,7 @@ import json
 import justpy as jp
 import base64
 
-path = Path().cwd() / ".models.json"
+path =  ".models.json"
 manager = ModelManager(path)
 print("> TTS Module Manager Loaded")
 with open(path,"rt") as f:

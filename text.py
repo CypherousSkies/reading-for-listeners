@@ -28,7 +28,7 @@ class TextProcessor:
         return text
     def _load(self,filename,sesspath,force):
         txt = sesspath+"/tmp.txt"
-        ocr(filename,sesspath+"/tmp.pdf",sidecar=txt,redo_ocr=(not force),deskew=force,rotate_pages=force,remove_background=force,clean=force,force_ocr=force)
+        ocr(sesspath+filename,sesspath+"/tmp.pdf",sidecar=txt,redo_ocr=(not force),deskew=force,rotate_pages=force,remove_background=force,clean=force,force_ocr=force)
         with open(sesspath+"/tmp.txt","r") as txt:
             text = txt.read()
         print("> OCR complete")
@@ -36,7 +36,7 @@ class TextProcessor:
     # from Ravi Ilango's Medium Post
     def _preprocess(self,text):
         text = re.sub("\n\d+\n","",text)
-        quotes = {'‘':"'", '’':"'", '“':'"', '”':'"','':''}
+        quotes = {'‘':"'", '’':"'", '“':'"', '”':'"','':'','-\n':''}
         quotes = dict((re.escape(k),v) for k,v in quotes.items())
         pattern = re.compile("|".join(quotes.keys()))
         text = pattern.sub(lambda m: quotes[re.escape(m.group(0))], text)
@@ -51,6 +51,11 @@ class TextProcessor:
         text = pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
         text = re.sub("\d+"," ",text)
         text = re.sub("'(?!s )"," ' ",text)
+        try:
+            pos_tag(text.split()[0])
+        except:
+            import nltk
+            nltk.download('averaged_perceptron_tagger')
         def get_personslist(text):
             tagged = set(pos_tag(text.split()))
             return list(set([word for word,pos in tagged if pos == 'NNP']))
@@ -110,5 +115,6 @@ class TextProcessor:
             s = slice(len(mask_token_ids),None)
             incorrectwords = incorrectwords[s]
         print("> finished BERT correction")
+        text_original = text_original.replace("\n"," ")
         return text_original
 

@@ -2,9 +2,12 @@
 in/*
 # Output folder
 out/*
+# .models.json
+.models.json
 
-# As much as i'd love to put pdfs onto github, they're not my content
+# As much as i'd love to put pdfs onto github, they're not legally my content
 *.pdf
+*.txt
 
 #Byte-compiled / optimized / DLL files
 __pycache__/
