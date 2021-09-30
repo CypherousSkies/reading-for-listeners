@@ -8,7 +8,7 @@ import time
 import csv
 import re
 
-force_english = True
+force_english = False
 
 tag_remover = re.compile('<.*?>')
 

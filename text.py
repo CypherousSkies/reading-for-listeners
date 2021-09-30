@@ -47,8 +47,10 @@ class TextProcessor:
     # get and correct text
     def loadpdf(self,filename,sesspath,force=True,force_english=False):
         text0 = self._load(filename,sesspath,force)
+        os.remove(sesspath+"tmp/tmp.pdf")
+        os.remove(sesspath+"tmp/tmp.txt")
         return correct_text(text0,force_english=force_english)
-    def correct_text(self,text,force_english=False):
+    def correct_text(self,text0,force_english=False):
         text,text_original,incorrect = self._preprocess(text0)
         incorrect_ratio = len(incorrect)/len(text.split(" "))
         if incorrect_ratio > 0.1 or force_english: #if more than 10% of the words are wrong, it's possible there's another language mucking it up
@@ -57,8 +59,6 @@ class TextProcessor:
             text0 = only_english(text0)
             text,text_original,incorrect = self._preprocess(text0)
         text = self._correct(text,text_original,incorrect)
-        os.remove(sesspath+"tmp/tmp.pdf")
-        os.remove(sesspath+"tmp/tmp.txt")
         return text
 
     def _load(self,filename,sesspath,force):
