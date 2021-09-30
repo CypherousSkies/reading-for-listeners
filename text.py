@@ -49,7 +49,7 @@ class TextProcessor:
         text0 = self._load(filename,sesspath,force)
         os.remove(sesspath+"tmp/tmp.pdf")
         os.remove(sesspath+"tmp/tmp.txt")
-        return correct_text(text0,force_english=force_english)
+        return self.correct_text(text0,force_english=force_english)
     def correct_text(self,text0,force_english=False):
         text,text_original,incorrect = self._preprocess(text0)
         incorrect_ratio = len(incorrect)/len(text.split(" "))
