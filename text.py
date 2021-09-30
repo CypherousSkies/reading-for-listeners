@@ -1,6 +1,7 @@
 import torch
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 import re
+import nltk
 from nltk.tag import pos_tag
 from spellchecker import SpellChecker
 from difflib import SequenceMatcher
@@ -8,9 +9,34 @@ from ocrmypdf import ocr
 import numpy as np
 import os
 
+def only_english(text):
+    import nltk
+    nltk.download('words')
+    words = set(nltk.corpus.words.words())
+    return " ".join(w for w in nltk.wordpunct_tokenize(text) if w.lower() in words or not w.isalpha())
+
 def string_metric(str1,str2):
     score = SequenceMatcher(None,str1,str2).ratio()
     return score
+
+def split_into_sentences(string):
+    try:
+        sentences = nltk.sent_tokenize(string)
+    except:
+        nltk.download('punkt')
+        sentences = nltk.sent_tokenize(string)
+    return sentences
+
+odds = {'‘':"'", '’':"'", '“':'"', '”':'"','':'','-\n':'','|':'',}
+odds = dict((re.escape(k),v) for k,v in odds.items())
+odd_re = re.compile("|".join(odds.keys()))
+spec = { '\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
+         '[': ' [ ', ']': ' ] ', ',':' , ', '.':' . ', '!':' ! ',
+         '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', '—':' ',
+         '(': ' ( ', ')': ' ) ', "s'": "s '", ":":" : ",";":" ; "}
+spec = dict((re.escape(k), v) for k, v in spec.items())
+spec_re = re.compile("|".join(spec.keys()))
+
 
 class TextProcessor:
     def __init__(self,bert_model="distilbert-base-multilingual-cased",sc_langs=["en","fr"]):
@@ -19,45 +45,47 @@ class TextProcessor:
         self.sc = SpellChecker(distance=1,language=sc_langs)
         print("> BERT initialized")
     # get and correct text
-    def loadtext(self,filename,sesspath,force=True):
-        text = self._load(filename,sesspath,force)
-        text,text_original,incorrect = self._preprocess(text)
+    def loadpdf(self,filename,sesspath,force=True,force_english=False):
+        text0 = self._load(filename,sesspath,force)
+        return correct_text(text0,force_english=force_english)
+    def correct_text(self,text,force_english=False):
+        text,text_original,incorrect = self._preprocess(text0)
+        incorrect_ratio = len(incorrect)/len(text.split(" "))
+        if incorrect_ratio > 0.1 or force_english: #if more than 10% of the words are wrong, it's possible there's another language mucking it up
+            if not force_english:
+                print(f"> {incorrect_ratio*100}% of words marked wrong, filtering non-english component")
+            text0 = only_english(text0)
+            text,text_original,incorrect = self._preprocess(text0)
         text = self._correct(text,text_original,incorrect)
-        os.remove(sesspath+"/tmp.pdf")
-        os.remove(sesspath+"/tmp.txt")
+        os.remove(sesspath+"tmp/tmp.pdf")
+        os.remove(sesspath+"tmp/tmp.txt")
         return text
+
     def _load(self,filename,sesspath,force):
-        txt = sesspath+"/tmp.txt"
-        ocr(sesspath+filename,sesspath+"/tmp.pdf",sidecar=txt,redo_ocr=(not force),deskew=force,rotate_pages=force,remove_background=force,clean=force,force_ocr=force)
-        with open(sesspath+"/tmp.txt","r") as txt:
+        tpath = sesspath+"tmp/tmp.txt"
+        if not os.path.isdir(sesspath+"tmp/"):
+            os.mkdir(sesspath+"tmp/")
+        ocr(sesspath+filename,sesspath+"tmp/tmp.pdf",sidecar=tpath,redo_ocr=(not force),deskew=force,rotate_pages=force,remove_background=force,clean=force,force_ocr=force)
+        with open(tpath,"r") as txt:
             text = txt.read()
         print("> OCR complete")
         return text
     # from Ravi Ilango's Medium Post
     def _preprocess(self,text):
         text = re.sub("\n\d+\n","",text)
-        quotes = {'‘':"'", '’':"'", '“':'"', '”':'"','':'','-\n':''}
-        quotes = dict((re.escape(k),v) for k,v in quotes.items())
-        pattern = re.compile("|".join(quotes.keys()))
-        text = pattern.sub(lambda m: quotes[re.escape(m.group(0))], text)
+        text = odd_re.sub(lambda m: odds[re.escape(m.group(0))], text)
+        text = ' '.join([t for t in split_into_sentences(text) if t != ""])
         text_original = text
         # cleanup text
-        rep = { '\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
-                '[': ' [ ', ']': ' ] ', ',':' , ', '.':' . ', '!':' ! ',
-                '?':' ? ', "n't": " not" , "'ll": " will", '*':' * ', '—':' ',
-                '(': ' ( ', ')': ' ) ', "s'": "s '", ":":" : ",";":" ; "}
-        rep = dict((re.escape(k), v) for k, v in rep.items())
-        pattern = re.compile("|".join(rep.keys()))
-        text = pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+        text = spec_re.sub(lambda m: spec[re.escape(m.group(0))], text)
         text = re.sub("\d+"," ",text)
         text = re.sub("'(?!s )"," ' ",text)
-        try:
-            pos_tag(text.split()[0])
-        except:
-            import nltk
-            nltk.download('averaged_perceptron_tagger')
         def get_personslist(text):
-            tagged = set(pos_tag(text.split()))
+            try:
+                tagged = set(pos_tag(text.split()))
+            except:
+                nltk.download('averaged_perceptron_tagger')
+                tagged = set(pos_tag(text.split()))
             return list(set([word for word,pos in tagged if pos == 'NNP']))
         personslist = get_personslist(text)
         #print(personslist)
