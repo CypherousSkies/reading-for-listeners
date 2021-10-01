@@ -4,13 +4,19 @@ In the future, this'll be a fun server that'll do the hard work, but for now, it
 This is a small personal project, so there won't be regular updates *per se*, but when I have time I'll push what I've got.
 
 ## Requirements
-Currently only tested on linux (primarily fedora, partially on ubuntu). On debian/ubuntu, run
+Currently only tested on linux (primarily debian). On debian, run
+
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
+
 `python3 -m venv venv`
+
 `souce venv/bin/activate`
+
 `pip install ocrmypdf transformers TTS pydub nltk pyspellchecker atlastk`
-And get pytorch
-Takes ~2-3GB :/
+
+And get [pytorch](https://pytorch.org)
+
+Takes ~2-3GB of disk space for install
 
 ## What works now
 test.py can turn all pdfs in a folder called `in/` into mp3s in a folder called `out/`, with the full ocr -> BERT -> tts pipeline (it is advisable to run fixswap.sh or otherwise get lots of memory for this as longer texts can have pretty large outputs).
