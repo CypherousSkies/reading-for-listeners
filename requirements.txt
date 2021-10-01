@@ -1,0 +1,7 @@
+ocrmypdf
+transformers
+TTS
+pydub
+nltk
+pyspellchecker
+atlastk
