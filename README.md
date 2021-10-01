@@ -6,7 +6,8 @@ This is a small personal project, so there won't be regular updates *per se*, bu
 ## Requirements
 Currently only tested on linux (primarily fedora, partially on ubuntu). On debian/ubuntu, run
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
-and on any platform (preferably in a virtualenv):
+`python3 -m venv venv`
+`souce venv/bin/activate`
 `pip install ocrmypdf transformers TTS pydub nltk pyspellchecker atlastk`
 And get pytorch
 Takes ~2-3GB :/
