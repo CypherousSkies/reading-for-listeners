@@ -25,7 +25,7 @@ Unfortunately, almost all of the pdfs I'm experimenting with are in the 10s of t
 
 ## Automated Pipeline
 When everything works, this'll probably be how it fits together:
-input.pdf -> sanitize pdf (??? qubes has a solution for this, but that can't be packaged) -> ocrmypdf (ghostscript -> unpaper -> tesseract-ocr) -> preprocessing (regex) -> ocr correction (BERT) -> postprocessing (regex) -> text to speech (Mozilla TTS) -> wav to mp3 (pydub~ffmpeg) -> out.mp3
+input.pdf -> sanitize pdf (??? qubes has a solution for this, but that can't be packaged) -> ocrmypdf (ghostscript -> unpaper -> tesseract-ocr) -> preprocessing (regex) -> ocr correction (BERT) -> postprocessing (regex) -> text to speech (Mozilla/coqui-ai TTS) -> wav to mp3 (pydub~ffmpeg) -> out.mp3
 (an outline of the old non-python bash workflow can be found in `readaloud.sh`, which I was using before I started this project)
 I'll almost certainly need to fine-tune BERT and TTS to better deal with the texts I'm interested in when I get access to a ML rig, but until then, I'll keep using the off-the-shelf models.
 Hopefully this can all be controlled by a nice, simple web ui and left running on a server for public use.
