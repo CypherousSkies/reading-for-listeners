@@ -10,6 +10,8 @@ Currently only tested on linux (primarily debian). On debian, run
 
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
 
+`cd pdf-to-speech`
+
 `python3 -m venv venv`
 
 `souce venv/bin/activate`
@@ -28,13 +30,13 @@ Takes ~2-3GB of disk space for install
 Currently only supports english language texts, although this will change with the next version
 
 ### Benchmarks
-On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap) takes `0.128*(word count)-52.616` seconds (r^2=0.949,n=3), which is actually pretty good, clocking in at around 10 words per second with some overhead.
+On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap) takes `0.124*(word count)-3.8` seconds (r^2=0.942,n=6), which is actually pretty good, clocking in at around 10 words per second with some overhead.
 Unfortunately, almost all of the pdfs I'm experimenting with are in the 10s of thousands of words, which clocks in at around half an hour, which is less good for getting through my backlog. Ah well.
 
 ## Automated Pipeline
 When everything works, this'll probably be how it fits together:
 input.pdf -> sanitize pdf (??? qubes has a solution for this, but that can't be packaged as of now) -> ocrmypdf (ghostscript -> unpaper -> tesseract-ocr) -> preprocessing (regex) -> ocr correction (BERT) -> postprocessing (regex) -> text to speech (Mozilla/coqui-ai TTS) -> wav to mp3 (pydub~ffmpeg) -> out.mp3
 (an outline of the old non-python bash workflow can be found in `readaloud.sh`, which I was using before I started this project)
-I'll almost certainly need to fine-tune BERT and TTS to better deal with the texts I'm interested in when I get access to a ML rig, but until then, I'll keep using the off-the-shelf models.
+I'll almost certainly need to fine-tune TrOCR/BERT and TTS to better deal with the texts I'm interested in when I get access to a ML rig, but until then, I'll keep using the off-the-shelf models.
 Hopefully this can all be controlled by a nice, simple web ui and left running on a server for public use.
-Also I'd like to package this into an executable which requires minimal technical knowlege to use and maintain, but that's a far-off goal.
+Also I'd like to package this into an executable which requires minimal technical knowledge to use and maintain, but that's a far-off goal.

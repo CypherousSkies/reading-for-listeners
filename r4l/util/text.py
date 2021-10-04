@@ -78,7 +78,7 @@ class TextProcessor:
     # from Ravi Ilango's Medium Post
     def _preprocess(self, text):
         text = re.sub("\n\d+\n", "", text)
-        text = re.sub(page_numbers, '', text)
+        #text = re.sub(page_numbers, '', text)
         text = odd_re.sub(lambda m: odds[re.escape(m.group(0))], text)
         text = ' '.join([t for t in split_into_sentences(text) if t != ""])
         text_original = text

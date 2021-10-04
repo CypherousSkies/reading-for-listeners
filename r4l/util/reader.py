@@ -3,7 +3,7 @@ from TTS.utils.synthesizer import Synthesizer
 from pydub import AudioSegment
 import numpy as np
 from pathlib import Path
-from pdf_to_speech.util.text import split_into_sentences
+from r4l.util.text import split_into_sentences
 
 models_dict = {
     'en': ['tts_models/en/ljspeech/tacotron2-DDC', 'vocoder_models/en/ljspeech/hifigan_v2'],
@@ -28,11 +28,12 @@ class Reader:
             model_name = tts_name
         if voc_name is not None:
             vocoder_name = voc_name
+        print(model_name, vocoder_name)
         model_path, config_path, _ = manager.download_model(model_name)
         if vocoder_name is None:
             self.synth = Synthesizer(model_path, config_path)
         else:
-            vocoder_path, vocoder_config_path, _ = manager.download_model(voc_name)
+            vocoder_path, vocoder_config_path, _ = manager.download_model(vocoder_name)
             self.synth = Synthesizer(model_path, config_path, vocoder_checkpoint=vocoder_path,
                                      vocoder_config=vocoder_config_path)
         return
@@ -42,7 +43,8 @@ class Reader:
 
     def tts(self, text, fname):
         print(f"> Reading {fname}")
-        max_len = max(len(s) for s in split_into_sentences(text))
+        sens = split_into_sentences(text)
+        max_len = max([len(s) for s in sens])
         self.synth.tts_model.decoder.max_decoder_steps = max_len*3
         wav = self.synth.tts(text)
         wav = np.array(wav)
