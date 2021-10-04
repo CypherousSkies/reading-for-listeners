@@ -66,7 +66,7 @@ def main():
                     """In the interests of user-friendliness, this cli will be kept pretty bare-bones"""
                     """
         Basic usage:
-        $ r4l [--in_path in/] [--out_path out/] [--lang "en"]
+        $ r4l [--in_path in/] [--out_path out/] [--lang en]
         Converts pdfs, txts, muses in the folder "in/" and output mp3s to the folder "out/" with the primary language set to "en"
         List languages:
         $ r4l --list_languages

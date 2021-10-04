@@ -38,9 +38,9 @@ get [pytorch](https://pytorch.org)
 Takes ~2-3GB of disk space for install
 
 ## Usage
-`p2s [--in_path in/] [--out_path out/]` runs the full pipeline on all compatible file-types in the directory `in/` and  outputs mp3 files to `out/`.
+`r4l [--in_path in/] [--out_path out/] [--lang en]` runs the suite of scanning and correction on all compatible files in the directory `in/` and  outputs mp3 files to `out/` using the language `en`.
 
-Currently only supports english language texts, although this will change with the next version
+Run `r4l` to list supported languages
 
 ### Benchmarks
 On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap) takes `0.124*(word count)-3.8` seconds (r^2=0.942,n=6), which is actually pretty good, clocking in at around 10 words per second with some overhead.
