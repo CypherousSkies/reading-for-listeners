@@ -17,6 +17,6 @@ setup(
         url='https://github.com/CypherousSkies/pdf-to-speech',
         license=license,
         packages=find_packages(exclude=('tests','docs')),
-        install_requires=reqs
-        entry_points={"console_scripts":["pdf2speech=pdf-to-speech.bin.cli:main"]}
+        install_requires=reqs#,
+        #entry_points={"console_scripts":"pdf2speech=pdf-to-speech.bin.cli:main"}
 )
