@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/pdf-to-speech.iml" filepath="$PROJECT_DIR$/.idea/pdf-to-speech.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/reading-for-listeners.iml" filepath="$PROJECT_DIR$/.idea/reading-for-listeners.iml" />
     </modules>
   </component>
 </project>
