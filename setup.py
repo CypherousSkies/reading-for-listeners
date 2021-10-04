@@ -7,7 +7,7 @@ with open('README.md', 'r') as f:
     readme = f.read()
 setup(
     name='reading4listeners',
-    version='0.0.1',
+    version='0.0.2',
     packages=['r4l'],
     url='https://github.com/CypherousSkies/reading-for-listeners',
     license=legal,
