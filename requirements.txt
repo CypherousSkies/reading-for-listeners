@@ -6,3 +6,4 @@ nltk~=3.6.3
 atlastk~=0.12.10
 setuptools~=58.2.0
 torch~=1.9.1
+numpy~=1.19.5
