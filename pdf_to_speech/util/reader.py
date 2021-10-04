@@ -14,7 +14,9 @@ models_dict = {
         'zh':['tts_models/zh-CN/baker/tacotron2-DDC-GST', None]
         }
 
-manager = ModelManager("../../TTS/.models.json")#Path(__file__).parent/"../.models.json")
+#later i'll figure out how to load TTS's .models.json
+
+manager = ModelManager(Path(__file__).parent/"../.models.json")
 
 class Reader:
     def __init__(self,outpath,lang='en',tts_name=None,voc_name=None):

@@ -1,4 +1,4 @@
-from pdf2speech.util.text import TextProcessor
+from pdf_to_speech.util.text import TextProcessor
 from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
 from pydub import AudioSegment

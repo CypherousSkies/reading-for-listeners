@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import argparse
-from pdf2speech.util.text import TextProcessor
-from pdf2speech.util.tts import Reader
+from pdf_to_speech.util.text import TextProcessor
+from pdf_to_speech.util.reader import Reader
 import os
 import time
 import csv
@@ -56,7 +56,7 @@ def main():
                     """In the interests of user-friendliness, this cli will be kept pretty bare-bones"""
                     """
         Basic usage:
-        $ ./pdf2speech/bin/cli.py [--in_path in/] [--out_path out/]
+        $ ./pdf_to_speech/bin/cli.py [--in_path in/] [--out_path out/]
         will convert (english language) pdfs in the folder "in/" and output mp3s to the folder "out/"
             """
     )
