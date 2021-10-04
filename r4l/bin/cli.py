@@ -66,6 +66,8 @@ def main():
     if not os.path.isdir(args.in_path):
         print("input path must exist and contain files!")
         parser.parse_args(["-h"])
+    if not os.path.isdir(args.out_path):
+        os.mkdir(args.out_path)
     start_time = time.time()
     force_english: bool = False
     texts, files, wordcount = get_texts(args.in_path, force_english)
