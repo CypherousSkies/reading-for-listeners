@@ -2,7 +2,7 @@ from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
 from pydub import AudioSegment
 import os
-import Path
+from pathlib import Path
 
 models_dict = {
         'en':['tts_models/en/ljspeech/tacotron2-DDC','vocoder_models/en/ljspeech/hifigan_v2'],
@@ -14,7 +14,7 @@ models_dict = {
         'zh':['tts_models/zh-CN/baker/tacotron2-DDC-GST', None]
         }
 
-manager = ModelManager(Path(__file__).parent/"../.models.json")
+manager = ModelManager("../../TTS/.models.json")#Path(__file__).parent/"../.models.json")
 
 class Reader:
     def __init__(self,outpath,lang='en',tts_name=None,voc_name=None):

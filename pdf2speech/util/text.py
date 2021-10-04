@@ -6,7 +6,6 @@ from nltk.tag import pos_tag
 from spellchecker import SpellChecker
 from difflib import SequenceMatcher
 from ocrmypdf import ocr
-import numpy as np
 import os
 
 def only_english(text):
