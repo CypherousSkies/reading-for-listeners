@@ -19,7 +19,6 @@ models_dict = {
 
 manager = ModelManager(Path(__file__).parent / "../.models.json")
 
-
 class Reader:
     def __init__(self, outpath, lang='en', tts_name=None, voc_name=None):
         self.outpath = outpath

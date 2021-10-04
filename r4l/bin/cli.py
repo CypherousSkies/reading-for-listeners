@@ -68,10 +68,15 @@ def main():
         parser.parse_args(["-h"])
     if not os.path.isdir(args.out_path):
         os.mkdir(args.out_path)
+    run(args.in_path, args.out_path)
+    return
+
+
+def run(in_path, out_path):
     start_time = time.time()
     force_english: bool = False
-    texts, files, wordcount = get_texts(args.in_path, force_english)
-    read_texts(texts, files, args.out_path)
+    texts, files, wordcount = get_texts(in_path, force_english)
+    read_texts(texts, files, out_path)
     time_taken = time.time() - start_time
     with open('time_data.csv', 'a') as f:
         writer = csv.writer(f)
@@ -81,4 +86,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run("in/", "out/")
