@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="make pypi happy">
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="0.0.3 language hotfix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/reader.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/r4l/util/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +123,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633393201485</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="0.0.3 language hotfix">
+      <created>1633394782712</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1633394782712</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -149,6 +153,7 @@
     <MESSAGE value="0.0.2 release!" />
     <MESSAGE value="update readme, fix doc typo in cli" />
     <MESSAGE value="make pypi happy" />
-    <option name="LAST_COMMIT_MESSAGE" value="make pypi happy" />
+    <MESSAGE value="0.0.3 language hotfix" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.0.3 language hotfix" />
   </component>
 </project>

@@ -44,7 +44,10 @@ class TextProcessor:
         self.tokenizer = AutoTokenizer.from_pretrained(bert_model)
         self.model = AutoModelForMaskedLM.from_pretrained(bert_model)
         self.sc = SpellChecker(distance=1, language=langs)
-        self.lang = [l[3] for l in lang_dict[langs]]
+        if langs is list:
+            self.lang = [lang_dict[l][2] for l in langs]
+        else:
+            self.lang = lang_dict[langs][2]
         print("> BERT initialized")
 
     # get and correct text
