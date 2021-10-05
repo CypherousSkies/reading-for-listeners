@@ -27,17 +27,21 @@ class Reader:
                                      vocoder_config=vocoder_config_path)
         return
 
-    def _decoder_split(self, text):
-        raise NotImplementedError()
-
     def tts(self, text, fname):
         print(f"> Reading {fname}")
-        sens = [s for s in self.synth.split_into_sentences(text) if len(s.split(' '))>=2]
-        print(len(sens))
-        max_len = max([len(s) for s in sens])
-        self.synth.tts_model.decoder.max_decoder_steps = max_len*3
-        wav = self.synth.tts(' '.join(sens))
-        wav = np.array(wav)
+        sens = self.synth.split_into_sentences(text)
+        # do it again because uh french is not happy
+        sens = [self.synth.split_into_sentences(sen) for sen in sens]
+        sens = [sen for l in sens for sen in l]
+        sens = [s for s in sens if len(s.split(' '))>=2]
+        wav = None
+        for sen in sens:
+            print(f"| > Reading {len(sen)} characters")
+            self.synth.tts_model.decoder.max_decoder_steps = len(sen)*3
+            if wav is None:
+                wav = np.array(self.synth.tts(sen))
+            else:
+                wav = np.append(wav,self.synth.tts(sen))
         wav = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         wav = wav.astype(np.int16)
         print(f"> Saving as {self.outpath}{fname}.mp3")

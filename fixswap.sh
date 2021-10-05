@@ -1,7 +1,11 @@
 sudo swapoff -a
 # size = bs*count Bytes, currently 10GiB
-sudo dd if=/dev/zero of=/swapfile bs=1024 count=10485760 status=progress
-sudo chmod 0600 /swapfile
+if test -f "/swapfile"; then
+	echo "swapfile already exists";
+else
+	sudo dd if=/dev/zero of=/swapfile bs=1024 count=10485760 status=progress
+	sudo chmod 0600 /swapfile
+fi
 sudo mkswap /swapfile
 sudo swapon /swapfile
 sudo swapon --show
