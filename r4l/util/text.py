@@ -9,6 +9,7 @@ from ocrmypdf import ocr
 import os
 from r4l import lang_dict
 
+
 def only_english(text):
     import nltk
     nltk.download('words')
@@ -29,7 +30,8 @@ def split_into_sentences(string):
         sentences = nltk.sent_tokenize(string)
     return sentences
 
-odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '': '', '-\n': '', '|': '', }
+
+odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '«': '"', '»': '"', '': '', 'ન': '', '-\n': '', '|': '', }
 odds = dict((re.escape(k), v) for k, v in odds.items())
 odd_re = re.compile("|".join(odds.keys()))
 spec = {'\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
@@ -38,6 +40,7 @@ spec = {'\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
         '(': ' ( ', ')': ' ) ', "s'": "s '", ":": " : ", ";": " ; "}
 spec = dict((re.escape(k), v) for k, v in spec.items())
 spec_re = re.compile("|".join(spec.keys()))
+
 
 class TextProcessor:
     def __init__(self, bert_model="distilbert-base-multilingual-cased", langs=["en", "fr"]):
@@ -73,7 +76,7 @@ class TextProcessor:
         if not os.path.isdir(sesspath + "tmp/"):
             os.mkdir(sesspath + "tmp/")
         ocr(sesspath + filename, sesspath + "tmp/tmp.pdf", sidecar=tpath, redo_ocr=(not force), deskew=force,
-            rotate_pages=force, remove_background=force, clean=force, force_ocr=force,language=self.lang)
+            rotate_pages=force, remove_background=force, clean=force, force_ocr=force, language=self.lang)
         with open(tpath, "r") as txt:
             text = txt.read()
         print("> OCR complete")
@@ -82,7 +85,7 @@ class TextProcessor:
     # from Ravi Ilango's Medium Post
     def _preprocess(self, text):
         text = re.sub("\n\d+\n", "", text)
-        #text = re.sub(page_numbers, '', text)
+        # text = re.sub(page_numbers, '', text)
         text = odd_re.sub(lambda m: odds[re.escape(m.group(0))], text)
         text = ' '.join([t for t in split_into_sentences(text) if t != ""])
         text_original = text
