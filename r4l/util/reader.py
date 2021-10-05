@@ -3,7 +3,6 @@ from TTS.utils.synthesizer import Synthesizer
 from pydub import AudioSegment
 import numpy as np
 from pathlib import Path
-from r4l.util.text import split_into_sentences
 from r4l import lang_dict
 
 # later i'll figure out how to load TTS's .models.json
@@ -33,10 +32,11 @@ class Reader:
 
     def tts(self, text, fname):
         print(f"> Reading {fname}")
-        sens = split_into_sentences(text)
+        sens = [s for s in self.synth.split_into_sentences(text) if len(s.split(' '))>=2]
+        print(len(sens))
         max_len = max([len(s) for s in sens])
         self.synth.tts_model.decoder.max_decoder_steps = max_len*3
-        wav = self.synth.tts(text)
+        wav = self.synth.tts(' '.join(sens))
         wav = np.array(wav)
         wav = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         wav = wav.astype(np.int16)

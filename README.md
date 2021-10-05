@@ -15,19 +15,30 @@ The other solutions to this problem are closed source and cost a *lot* of money.
 ### Simple UI
 Eventually this project will have a neat web UI which'll require very little input from the end user.
 This is accessibility software after all -- it would be weird if it was hard to use.
+Unfortunately, for now I only have a cli which is only been tested on linux. Not the best, but I gotta start somewhere.
 
 ## Install
-If you're just going to run it (on debian/ubuntu):
 
+### Windows
+The easiest way of doing this is by installing [WSL](https://docs.microsoft.com/en-us/windows/wsl/) with Ubuntu and follow the Ubuntu/debian instructions.
+
+If you're fancy and know how to python on windows, tell me how it goes and how you did it!
+
+Note: unfortunately, it's hard to set up gpu stuff for WSL, and even then only really works for CUDA (NVIDIA) cards, which I have no way of testing as of now (not that I could test any gpu stuff now, but that's beyond the point).
+
+### Mac
+Gotta say, I have no idea how to get all the dependencies on mac. A cursory glance says that `brew` or `port` should be able to get most of them, but I have no idea about their availability. If you have a mac and figured this out, let me know how you did it!
+
+### Ubuntu/Debian
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
 
-Make a virtual environment, get [pytorch](https://pytorch.org), then run
+Make and activate a [virtual environment](https://docs.python.org/3/tutorial/venv.html), get [pytorch](https://pytorch.org), then run
 
 `pip install reading4listeners`
 
-And you're all set!
+And you're all set to run `r4l` (see below for usage info)
 
-### Install from file
+### Install from source
 On debian, run
 
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
@@ -52,6 +63,8 @@ Takes ~2-3GB of disk space for install
 `r4l [--in_path in/] [--out_path out/] [--lang en]` runs the suite of scanning and correction on all compatible files in the directory `in/` and  outputs mp3 files to `out/` using the language `en`.
 
 Run `r4l --list_langs` to list supported languages
+
+This program uses a lot of memory so I'd advise expanding your swap size by ~10GB (for debian use fixswap.sh)
 
 ### Benchmarks
 On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap) takes `0.124*(word count)-3.8` seconds (r^2=0.942,n=6), which is actually pretty good, clocking in at around 10 words per second with some overhead.

@@ -31,7 +31,7 @@ def split_into_sentences(string):
     return sentences
 
 
-odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '«': '"', '»': '"', '': '', 'ન': '', '-\n': '', '|': '', }
+odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '«': '"', '»': '"', '': '', '-\n': '', '|': '', '…':'','_':' ','—':'','...':'.','" "':'','  ':' '}
 odds = dict((re.escape(k), v) for k, v in odds.items())
 odd_re = re.compile("|".join(odds.keys()))
 spec = {'\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
@@ -87,7 +87,7 @@ class TextProcessor:
         text = re.sub("\n\d+\n", "", text)
         # text = re.sub(page_numbers, '', text)
         text = odd_re.sub(lambda m: odds[re.escape(m.group(0))], text)
-        text = ' '.join([t for t in split_into_sentences(text) if t != ""])
+        text = re.sub(' " '," ",text)
         text_original = text
         # cleanup text
         text = spec_re.sub(lambda m: spec[re.escape(m.group(0))], text)
