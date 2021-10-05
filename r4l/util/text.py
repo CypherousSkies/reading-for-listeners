@@ -88,6 +88,8 @@ class TextProcessor:
         # text = re.sub(page_numbers, '', text)
         text = odd_re.sub(lambda m: odds[re.escape(m.group(0))], text)
         text = re.sub(' " '," ",text)
+        rext = re.sub('".'," ",text)
+        text = re.sub("\(\d+\)","",text)
         text_original = text
         # cleanup text
         text = spec_re.sub(lambda m: spec[re.escape(m.group(0))], text)
