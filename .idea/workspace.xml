@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="update readme, fix doc typo in cli">
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="make pypi happy">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/text.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -116,7 +119,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633390142149</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="make pypi happy">
+      <created>1633393201485</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1633393201485</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -138,6 +148,7 @@
     <MESSAGE value="made workflow a little easier" />
     <MESSAGE value="0.0.2 release!" />
     <MESSAGE value="update readme, fix doc typo in cli" />
-    <option name="LAST_COMMIT_MESSAGE" value="update readme, fix doc typo in cli" />
+    <MESSAGE value="make pypi happy" />
+    <option name="LAST_COMMIT_MESSAGE" value="make pypi happy" />
   </component>
 </project>

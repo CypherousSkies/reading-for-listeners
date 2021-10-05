@@ -4,7 +4,8 @@ import argparse
 import sys
 
 from r4l.util.text import TextProcessor
-from r4l.util.reader import Reader, models_dict
+from r4l.util.reader import Reader
+from r4l import lang_dict
 import os
 import time
 import csv
@@ -28,7 +29,7 @@ def get_ext(filename):
 
 def get_texts(sesspath, lang, force_english):
     wordcount = 0
-    tp = TextProcessor(sc_langs=lang)
+    tp = TextProcessor(langs=lang)
     files = [f for f in os.listdir(sesspath) if get_ext(f) in ['pdf', 'txt', 'muse']]
     texts = [[] for _ in files]
     print(f"> Reading {files}")
@@ -86,7 +87,7 @@ def main():
     )
     args = parser.parse_args()
     if args.list_langs:
-        print(models_dict.keys())
+        print(list(lang_dict.keys()))
         sys.exit()
     if not os.path.isdir(args.in_path):
         print("input path must exist and contain files!")

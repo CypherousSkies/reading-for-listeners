@@ -7,6 +7,7 @@ from spellchecker import SpellChecker
 from difflib import SequenceMatcher
 from ocrmypdf import ocr
 import os
+from r4l import lang_dict
 
 def only_english(text):
     import nltk
@@ -38,12 +39,12 @@ spec = {'\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
 spec = dict((re.escape(k), v) for k, v in spec.items())
 spec_re = re.compile("|".join(spec.keys()))
 
-
 class TextProcessor:
-    def __init__(self, bert_model="distilbert-base-multilingual-cased", sc_langs=["en", "fr"]):
+    def __init__(self, bert_model="distilbert-base-multilingual-cased", langs=["en", "fr"]):
         self.tokenizer = AutoTokenizer.from_pretrained(bert_model)
         self.model = AutoModelForMaskedLM.from_pretrained(bert_model)
-        self.sc = SpellChecker(distance=1, language=sc_langs)
+        self.sc = SpellChecker(distance=1, language=langs)
+        self.lang = [l[3] for l in lang_dict[langs]]
         print("> BERT initialized")
 
     # get and correct text
@@ -69,7 +70,7 @@ class TextProcessor:
         if not os.path.isdir(sesspath + "tmp/"):
             os.mkdir(sesspath + "tmp/")
         ocr(sesspath + filename, sesspath + "tmp/tmp.pdf", sidecar=tpath, redo_ocr=(not force), deskew=force,
-            rotate_pages=force, remove_background=force, clean=force, force_ocr=force)
+            rotate_pages=force, remove_background=force, clean=force, force_ocr=force,language=self.lang)
         with open(tpath, "r") as txt:
             text = txt.read()
         print("> OCR complete")

@@ -4,16 +4,7 @@ from pydub import AudioSegment
 import numpy as np
 from pathlib import Path
 from r4l.util.text import split_into_sentences
-
-models_dict = {
-    'en': ['tts_models/en/ljspeech/tacotron2-DDC', 'vocoder_models/en/ljspeech/hifigan_v2'],
-    'fr': ['tts_models/fr/mai/tacotron2-DDC', 'vocoder_models/universal/libri-tts/fullband-melgan'],
-    'es': ['tts_models/es/mai/tacotron2-DDC', 'vocoder_models/universal/libri-tts/fullband-melgan'],
-    'de': ['tts_models/de/thorsten/tacotron2-DCA', 'vocoder_models/de/thorsten/fullband-melgan'],
-    'ja': ['tts_models/ja/kokoro/tacotron2-DDC', 'vocoder_models/ja/kokoro/hifigan_v1'],
-    'nl': ['tts_models/nl/mai/tacotron2-DDC', 'vocoder_models/nl/mai/parallel-wavegan'],
-    'zh': ['tts_models/zh-CN/baker/tacotron2-DDC-GST', None]
-}
+from r4l import lang_dict
 
 # later i'll figure out how to load TTS's .models.json
 
@@ -22,7 +13,7 @@ manager = ModelManager(Path(__file__).parent / "../.models.json")
 class Reader:
     def __init__(self, outpath, lang='en', tts_name=None, voc_name=None):
         self.outpath = outpath
-        model_name, vocoder_name = models_dict[lang]
+        model_name, vocoder_name, _ = lang_dict[lang]
         if tts_name is not None:
             model_name = tts_name
         if voc_name is not None:
