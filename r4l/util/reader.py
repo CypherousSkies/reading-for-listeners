@@ -37,7 +37,7 @@ class Reader:
         wav = None
         for sen in sens:
             print(f"| > Reading {len(sen)} characters")
-            self.synth.tts_model.decoder.max_decoder_steps = len(sen)*3
+            self.synth.tts_model.decoder.max_decoder_steps = len(sen)*10
             if wav is None:
                 wav = np.array(self.synth.tts(sen))
             else:
