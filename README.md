@@ -28,7 +28,7 @@ Make a virtual environment, get [pytorch](https://pytorch.org), then run
 And you're all set!
 
 ### Install from file
-Currently only tested on linux (primarily debian). On debian, run
+On debian, run
 
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
 
