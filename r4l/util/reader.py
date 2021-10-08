@@ -50,6 +50,8 @@ class Reader:
         # underwhelming, sentence splitter
         wav = None
         for sen in sens:
+            sen = " ".join([s for s in self.synth.split_into_sentences(sen) if len(s.split(" ")) >= 2]) # so some of
+            # the problem is null sentences. this fixes that i think
             print(sen)
             # print(f"| > Reading {len(sen)} characters")
             # self.synth.tts_model.decoder.max_decoder_steps = len(sen)*10
