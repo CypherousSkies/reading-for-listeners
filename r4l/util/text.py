@@ -22,16 +22,8 @@ def string_metric(str1, str2):
     return score
 
 
-def split_into_sentences(string):
-    try:
-        sentences = nltk.sent_tokenize(string)
-    except:
-        nltk.download('punkt')
-        sentences = nltk.sent_tokenize(string)
-    return sentences
-
-
-odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '«': '"', '»': '"', '': '', '-\n': '', '|': '', '…':'','_':' ','—':'','...':'.','" "':'','  ':' ',".!":"!","!.":"!","?.":"?",".?":"?","?!":"?","!?":"?"}
+odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '«': '"', '»': '"', '': '', '-\n': '', '|': '', '…': '', '_': ' ',
+        '—': '', '...': '.', '" "': '', '  ': ' ', ".!": "!", "!.": "!", "?.": "?", ".?": "?", "?!": "?", "!?": "?"}
 odds = dict((re.escape(k), v) for k, v in odds.items())
 odd_re = re.compile("|".join(odds.keys()))
 spec = {'\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
@@ -87,9 +79,9 @@ class TextProcessor:
         text = re.sub("\n\d+\n", "", text)
         # text = re.sub(page_numbers, '', text)
         text = odd_re.sub(lambda m: odds[re.escape(m.group(0))], text)
-        text = re.sub(' " '," ",text)
-        rext = re.sub('".'," ",text)
-        text = re.sub("\(\d+\)","",text)
+        text = re.sub(' " ', " ", text)
+        rext = re.sub('".', " ", text)
+        text = re.sub("\(\d+\)", "", text)
         text_original = text
         # cleanup text
         text = spec_re.sub(lambda m: spec[re.escape(m.group(0))], text)

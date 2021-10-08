@@ -4,10 +4,22 @@ from pydub import AudioSegment
 import numpy as np
 from pathlib import Path
 from r4l import lang_dict
+import nltk
+
+
+def split_into_sentences(string):
+    try:
+        sentences = nltk.sent_tokenize(string)
+    except:
+        nltk.download('punkt')
+        sentences = nltk.sent_tokenize(string)
+    return sentences
+
 
 # later i'll figure out how to load TTS's .models.json
 
 manager = ModelManager(Path(__file__).parent / "../.models.json")
+
 
 class Reader:
     def __init__(self, outpath, lang='en', tts_name=None, voc_name=None):
@@ -29,19 +41,22 @@ class Reader:
 
     def tts(self, text, fname):
         print(f"> Reading {fname}")
-        sens = self.synth.split_into_sentences(text)
+        sens = split_into_sentences(text)
         # do it again because uh french is not happy
-        sens = [self.synth.split_into_sentences(sen) for sen in sens]
-        sens = [sen for l in sens for sen in l]
-        sens = [s for s in sens if len(s.split(' '))>=2]
+        # sens = [self.synth.split_into_sentences(sen) for sen in sens]
+        # sens = [sen for l in sens for sen in l]
+        sens = [s for s in sens if len(s.split(' ')) >= 2]
+        self.synth.tts_model.decoder.max_decoder_steps = max(len(s) for s in sens) * 3  # overrides TTS's uh,
+        # underwhelming, sentence splitter
         wav = None
         for sen in sens:
-            print(f"| > Reading {len(sen)} characters")
-            self.synth.tts_model.decoder.max_decoder_steps = len(sen)*10
+            print(sen)
+            # print(f"| > Reading {len(sen)} characters")
+            # self.synth.tts_model.decoder.max_decoder_steps = len(sen)*10
             if wav is None:
                 wav = np.array(self.synth.tts(sen))
             else:
-                wav = np.append(wav,self.synth.tts(sen))
+                wav = np.append(wav, self.synth.tts(sen))
         wav = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         wav = wav.astype(np.int16)
         print(f"> Saving as {self.outpath}{fname}.mp3")
