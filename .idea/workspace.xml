@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="Still trying to fix french language bugs, unfortunately costing order of 20 seconds. Oops.">
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="OK so the problem is the header/footer issue again. I could keep trying to fix it by incremental solutions, but I think the answer has to be using openCV to find the body of the text">
       <change afterPath="$PROJECT_DIR$/r4l/util/ocr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/reader.py" afterDir="false" />
@@ -160,7 +160,14 @@
       <option name="project" value="LOCAL" />
       <updated>1633679567744</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="OK so the problem is the header/footer issue again. I could keep trying to fix it by incremental solutions, but I think the answer has to be using openCV to find the body of the text">
+      <created>1633725535000</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1633725535000</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -186,6 +193,7 @@
     <MESSAGE value="0.0.3 language hotfix" />
     <MESSAGE value="0.0.3 language hotfix 2" />
     <MESSAGE value="Still trying to fix french language bugs, unfortunately costing order of 20 seconds. Oops." />
-    <option name="LAST_COMMIT_MESSAGE" value="Still trying to fix french language bugs, unfortunately costing order of 20 seconds. Oops." />
+    <MESSAGE value="OK so the problem is the header/footer issue again. I could keep trying to fix it by incremental solutions, but I think the answer has to be using openCV to find the body of the text" />
+    <option name="LAST_COMMIT_MESSAGE" value="OK so the problem is the header/footer issue again. I could keep trying to fix it by incremental solutions, but I think the answer has to be using openCV to find the body of the text" />
   </component>
 </project>
