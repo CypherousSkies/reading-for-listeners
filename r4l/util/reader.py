@@ -61,6 +61,7 @@ class Reader:
                 wav = np.append(wav, self.synth.tts(sen))
         wav = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         wav = wav.astype(np.int16)
+        audio_time = len(wav)/self.synth.ap.sample_rate
         print(f"> Saving as {self.outpath}{fname}.mp3")
         AudioSegment(
             wav.tobytes(),
@@ -68,4 +69,4 @@ class Reader:
             sample_width=wav.dtype.itemsize,
             channels=1
         ).export(self.outpath + fname + '.mp3', format="mp3")
-        return self.outpath + fname + '.mp3'
+        return self.outpath + fname + '.mp3', audio_time

@@ -56,9 +56,11 @@ def get_texts(sesspath, lang, force_english):
 
 def read_texts(texts, files, outpath, lang):
     reader = Reader(outpath, lang=lang)
+    audio_len = 0
     for text, name in zip(texts, files):
-        reader.tts(text, name)
-    return
+        _,t = reader.tts(text, name)
+        audio_len += t
+    return audio_len
 
 
 def main():
@@ -102,12 +104,12 @@ def run(in_path, out_path, lang):
     start_time = time.time()
     force_english: bool = False
     texts, files, wordcount = get_texts(in_path, lang, force_english)
-    read_texts(texts, files, out_path, lang)
+    audio_time = read_texts(texts, files, out_path, lang)
     time_taken = time.time() - start_time
     with open('time_data.csv', 'a') as f:
         writer = csv.writer(f)
-        writer.writerow([wordcount, time_taken])
-    print(f"> Read {wordcount} words in {time_taken} seconds")
+        writer.writerow([wordcount, time_taken, audio_time])
+    print(f"> Read {wordcount} words in {time_taken} seconds with a real time factor of {time_taken/audio_time}")
     return
 
 
