@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 from pdf2image import convert_from_path
-from transformers import AutoTokenizer, AutoModel
+from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import random
 import math
 
@@ -16,7 +16,7 @@ def sample_borders(pdfpath):
     print(borders)
     p1 = (np.min(p1[0] for p1, _ in borders), np.min(p1[1] for p1, _ in borders))
     p2 = (np.max(p2[0] for _, p2 in borders), np.max(p2[1] for _, p2 in borders))
-    print(p1,p2)
+    print(p1, p2)
     return p1, p2
 
 
@@ -47,11 +47,17 @@ def get_border(img):
     p2 = (bound[:, 0].max(), bound[:, 1].max())
     cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
     cv2.imshow('edited', img)
-    #print(p1, p2)
+    # print(p1, p2)
     return (p1, p2)
 
 
 class TrOCR:
-    def __init__(self, model_name="nielsr/trocr-base-printed"):
-        self.tokenizer = AutoTokenizer(model_name)
-        self.model = AutoModel(model_name)
+    def __init__(self, model_name="microsoft/trocr-base-printed"):
+        self.processor = TrOCRProcessor.from_pretrained(model_name)
+        self.model = VisionEncoderDecoderModel.from_pretrained(model_name)
+
+    def _trocr(self, image):
+        pixel_values = self.processor(images=image, return_tensors="pt").pixel_values
+        generated_ids = self.model.generate(pixel_values)
+        generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        return generated_text

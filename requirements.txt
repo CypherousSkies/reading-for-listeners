@@ -1,5 +1,5 @@
 ocrmypdf~=12.6.0
-transformers~=4.10.3
+transformers~=4.11.3
 TTS~=0.3.1
 pydub~=0.25.1
 nltk~=3.6.3
