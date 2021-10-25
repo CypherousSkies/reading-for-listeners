@@ -1,5 +1,5 @@
 lang_dict = {
-    'en': ['tts_models/en/ljspeech/tacotron2-DDC', 'vocoder_models/en/ljspeech/hifigan_v2', 'eng'],
+    'en': ['tts_models/en/ljspeech/tacotron2-DDC_ph', 'vocoder_models/en/ljspeech/hifigan_v2', 'eng'],
     'fr': ['tts_models/fr/mai/tacotron2-DDC', 'vocoder_models/universal/libri-tts/fullband-melgan', 'fra'],
     'es': ['tts_models/es/mai/tacotron2-DDC', 'vocoder_models/universal/libri-tts/fullband-melgan', 'spa'],
     'de': ['tts_models/de/thorsten/tacotron2-DCA', 'vocoder_models/de/thorsten/fullband-melgan', 'deu'],

@@ -1,10 +1,12 @@
 import cv2
 import numpy as np
 from pdf2image import convert_from_path
-from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+# from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import random
 import math
 
+
+# https://www.geeksforgeeks.org/text-detection-and-extraction-using-opencv-and-ocr/
 
 def sample_borders(pdfpath):
     print("converting to imgs")
@@ -12,45 +14,49 @@ def sample_borders(pdfpath):
     print("sampling pages")
     imgs = random.sample(imgs, math.ceil(len(imgs) / 10))  # sample a 10% of pages to see what the shape looks like
     imgs = [np.array(img)[:, :, ::-1].copy() for img in imgs]  # convert to opencv
-    borders = [get_border(img) for img in imgs]
+    borders = [border(img) for img in imgs]
     print(borders)
-    p1 = (np.min(p1[0] for p1, _ in borders), np.min(p1[1] for p1, _ in borders))
-    p2 = (np.max(p2[0] for _, p2 in borders), np.max(p2[1] for _, p2 in borders))
+    p1 = (min(p1[0] for p1, _ in borders), min(p1[1] for p1, _ in borders))
+    p2 = (max(p2[0] for _, p2 in borders), max(p2[1] for _, p2 in borders))
     print(p1, p2)
     return p1, p2
 
 
-def get_border(img):
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    _, threshold = cv2.threshold(img, 150, 255, cv2.THRESH_BINARY)
-    contours, hierarchy = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    mask = np.ones(img.shape, np.uint8) * 255
-    for cnt in contours:
-        size = cv2.contourArea(cnt)
-        x, y, w, h = cv2.boundingRect(cnt)
-        if 10000 > size > 500 and w * 2.5 > h:
-            cv2.drawContours(mask, [cnt], -1, (0, 0, 0), -1)
-    kernel = np.ones((50, 50), np.uint8)
-    opening = cv2.morphologyEx(mask, cv2.MORPH_OPEN, kernel)
-    gray_op = cv2.cvtColor(opening, cv2.COLOR_BGR2GRAY)
-    _, threshold_op = cv2.threshold(gray_op, 150, 255, cv2.THRESH_BINARY_INV)
-    contours_op, hierarchy_op = cv2.findContours(threshold_op, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    cnt = max(contours_op, key=cv2.contourArea)
-    _, _, angle = rect = cv2.minAreaRect(cnt)
-    (h, w) = img.shape[:2]
-    (center) = (w // 2, h // 2)
-    box = cv2.boxPoints(rect)
-    a, b, c, d = box = np.int0(box)
-    bound = [a, b, c, d]
-    bound = np.array(bound)
-    p1 = (bound[:, 0].min(), bound[:, 1].min())
-    p2 = (bound[:, 0].max(), bound[:, 1].max())
-    cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
-    cv2.imshow('edited', img)
-    # print(p1, p2)
-    return (p1, p2)
+def border(img):
+    # Preprocessing the image starts
+
+    # Convert the image to gray scale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # Performing OTSU threshold
+    ret, thresh1 = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU | cv2.THRESH_BINARY_INV)
+
+    # Specify structure shape and kernel size.
+    # Kernel size increases or decreases the area
+    # of the rectangle to be detected.
+    # A smaller value like (10, 10) will detect
+    # each word instead of a sentence.
+    rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (18, 18))
+
+    # Applying dilation on the threshold image
+    dilation = cv2.dilate(thresh1, rect_kernel, iterations=1)
+
+    # Finding contours
+    contours, hierarchy = cv2.findContours(dilation, cv2.RETR_EXTERNAL,
+                                           cv2.CHAIN_APPROX_NONE)
+
+    boxes = [cv2.boundingRect(cnt) for cnt in contours]
+    print(boxes)
+    mean_width = sum(w for _, _, w, _ in boxes) / len(boxes)
+    tolerance = 0.1
+    boxes = [(x, y, w, h) for x, y, w, h in boxes if
+             mean_width * (1 - tolerance) <= w and w <= mean_width * (1 + tolerance)]
+    p1 = (min(x for x, _, _, _ in boxes), min(y for _, y, _, _ in boxes))
+    p2 = (max(w for _, _, w, _ in boxes) + p1[0], max(h for _, _, _, h in boxes) + p1[1])
+    return p1, p2
 
 
+"""
 class TrOCR:
     def __init__(self, model_name="microsoft/trocr-base-printed"):
         self.processor = TrOCRProcessor.from_pretrained(model_name)
@@ -61,3 +67,4 @@ class TrOCR:
         generated_ids = self.model.generate(pixel_values)
         generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         return generated_text
+"""
