@@ -1,9 +1,10 @@
+import math
+# from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+import random
+
 import cv2
 import numpy as np
 from pdf2image import convert_from_path
-# from transformers import TrOCRProcessor, VisionEncoderDecoderModel
-import random
-import math
 
 
 # https://www.geeksforgeeks.org/text-detection-and-extraction-using-opencv-and-ocr/

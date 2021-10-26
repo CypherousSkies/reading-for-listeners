@@ -1,28 +1,29 @@
 <div class="menu">
- <a>
-  <h1>
-   <em>PDF to Speech</em>
-  </h1>
-  <h2>A deep learning powered pipeline</h2>
- </a>
+    <a>
+        <h1>
+            <em>PDF to Speech</em>
+        </h1>
+        <h2>A deep learning powered pipeline</h2>
+    </a>
 </div>
 <div class="jumbo">
- <h2>Welcome!</h2>
- <p>
-  <span>Upload a file to get started!</span>
- </p>
- <a href="https://github.com/CypherousSkies/pdf-to-speech/" class="button">
-  <span>   Source Code   </span>
- </a>
+    <h2>Welcome!</h2>
+    <p>
+        <span>Upload a file to get started!</span>
+    </p>
+    <a class="button" href="https://github.com/CypherousSkies/pdf-to-speech/">
+        <span>   Source Code   </span>
+    </a>
 </div>
 <div>
- <div style="margin: auto; display: flex; justify-content: space-around; width: 50%;">
-  <form>
-   <input type="file" id="UploadFile" name="filename">
-   <input type="checkbox" id="UseBERT" name="bertcheck" value="UseBert"><label for="UseBERT">Use AI to improve OCR (slow!)</label>
-   <button class="button" id="UploadButton" xdh:mark="0" xdh:onevent="Upload">Upload</button>
-  </form>
- </div>
+    <div style="margin: auto; display: flex; justify-content: space-around; width: 50%;">
+        <form>
+            <input id="UploadFile" name="filename" type="file">
+            <input id="UseBERT" name="bertcheck" type="checkbox" value="UseBert"><label for="UseBERT">Use AI to improve
+            OCR (slow!)</label>
+            <button class="button" id="UploadButton" xdh:mark="0" xdh:onevent="Upload">Upload</button>
+        </form>
+    </div>
 </div>
-<div id="Texts" />
-<div id="TTS Options" />
+<div id="Texts"/>
+<div id="TTS Options"/>

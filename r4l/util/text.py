@@ -1,20 +1,15 @@
-import torch
-from transformers import AutoTokenizer, AutoModelForMaskedLM
-import re
-import nltk
-from nltk.tag import pos_tag
-from spellchecker import SpellChecker
-from difflib import SequenceMatcher
-from ocrmypdf import ocr
 import os
+import re
+from difflib import SequenceMatcher
+
+import nltk
+import torch
+from nltk.tag import pos_tag
+from ocrmypdf import ocr
+from spellchecker import SpellChecker
+from transformers import AutoTokenizer, AutoModelForMaskedLM
+
 from r4l import lang_dict
-
-
-def only_english(text):
-    import nltk
-    nltk.download('words')
-    words = set(nltk.corpus.words.words())
-    return " ".join(w for w in nltk.wordpunct_tokenize(text) if w.lower() in words or not w.isalpha())
 
 
 def string_metric(str1, str2):
@@ -24,7 +19,7 @@ def string_metric(str1, str2):
 
 odds = {'‘': "'", '’': "'", '“': '"', '”': '"', '«': '"', '»': '"', '': '', '-\n': '', '|': '', '…': '', '_': ' ',
         '—': '', '...': '.', '" "': '', '  ': ' ', ".!": "!", "!.": "!", "?.": "?", ".?": "?", "?!": "?", "!?": "?",
-        "{": "(", "}": ")", "#":"hashtag"}
+        "{": "(", "}": ")", "#": "hashtag"}
 odds = dict((re.escape(k), v) for k, v in odds.items())
 odd_re = re.compile("|".join(odds.keys()))
 spec = {'\n': ' ', '\\': ' ', '\"': ' " ', '-': ' ', '|': ' | ',
@@ -36,10 +31,11 @@ spec_re = re.compile("|".join(spec.keys()))
 
 
 class TextProcessor:
-    def __init__(self, bert_model="distilbert-base-multilingual-cased", langs=["en", "fr"]):
+    def __init__(self, bert_model="distilbert-base-multilingual-cased", langs="en"):
         self.tokenizer = AutoTokenizer.from_pretrained(bert_model)
         self.model = AutoModelForMaskedLM.from_pretrained(bert_model)
         self.sc = SpellChecker(distance=1, language=langs)
+        self.langs = langs
         if langs is list:
             self.lang = [lang_dict[l][2] for l in langs]
         else:
@@ -47,20 +43,33 @@ class TextProcessor:
         print("> BERT initialized")
 
     # get and correct text
-    def loadpdf(self, filename, sesspath, force=True, force_english=False):
+    def loadpdf(self, filename, sesspath, force=True):
         text0 = self._load(filename, sesspath, force)
         os.remove(sesspath + "tmp/tmp.pdf")
         os.remove(sesspath + "tmp/tmp.txt")
-        return self.correct_text(text0, force_english=force_english)
+        return self.correct_text(text0)
 
-    def correct_text(self, text0, force_english=False):
+    def correct_text(self, text0):
         text, text_original, incorrect = self._preprocess(text0)
         incorrect_ratio = len(incorrect) / len(text.split(" "))
-        if incorrect_ratio > 0.1 or force_english:  # if more than 10% of the words are wrong, it's possible there's another language mucking it up
-            if not force_english:
-                print(f"> {incorrect_ratio * 100}% of words marked wrong, filtering non-english component")
-            text0 = only_english(text0)
-            text, text_original, incorrect = self._preprocess(text0)
+        if incorrect_ratio > 0.1:  # if more than 10% of the words are wrong, it's possible there's another language mucking it up
+            print(
+                f"> {incorrect_ratio * 100}% of words marked wrong, this might be because the language was marked incorrectly.")
+            from langdetect import detect
+            lang = detect(text0)
+            diff_lang = False
+            if self.langs is list:
+                diff_lang = lang not in self.langs
+            else:
+                diff_lang = lang is not self.langs
+            if diff_lang:
+                print(f"> Detected {lang} instead of initialized {self.langs}")
+                self.sc = SpellChecker(distance=1, language=lang)
+                self.langs = lang
+                self.lang = lang_dict[lang][2]
+                text, text_original, incorrect = self._preprocess(text0)
+            else:
+                print(f"> Lang detection resulted in no change, so probably just poor OCR. Continuing.")
         text = self._correct(text, text_original, incorrect)
         return text
 

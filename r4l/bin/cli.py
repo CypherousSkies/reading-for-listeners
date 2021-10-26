@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import argparse
-import sys
-
-from r4l.util.text import TextProcessor
-from r4l.util.reader import Reader
-from r4l import lang_dict
-import os
-import time
 import csv
+import os
 import re
+import sys
+import time
+
+from r4l import lang_dict
+from r4l.util.reader import Reader
+from r4l.util.text import TextProcessor
 
 os.environ["TOKENIZERS_PARALLELISM"] = "False"
 tag_remover = re.compile('<.*?>')
+
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -23,11 +24,12 @@ def str2bool(v):
         return False
     raise argparse.ArgumentTypeError("Boolean value expected.")
 
+
 def get_ext(filename):
     return filename.split(".")[-1]
 
 
-def get_texts(sesspath, lang, force_english):
+def get_texts(sesspath, lang):
     wordcount = 0
     tp = TextProcessor(langs=lang)
     files = [f for f in os.listdir(sesspath) if get_ext(f) in ['pdf', 'txt', 'muse']]
@@ -35,16 +37,16 @@ def get_texts(sesspath, lang, force_english):
     print(f"> Reading {files}")
     for i, filename in enumerate(files):
         if get_ext(filename) == 'pdf':
-            text = tp.loadpdf(filename, sesspath, force=True, force_english=force_english)
+            text = tp.loadpdf(filename, sesspath, force=True)
         elif get_ext(filename) == 'txt':
             with open(sesspath + filename, 'rt') as f:
                 text = f.read()
-            text = tp.correct_text(text, force_english=force_english)
+            text = tp.correct_text(text)
         elif get_ext(filename) == 'muse':
             with open(sesspath + filename, 'rt') as f:
                 text = f.read()
             text = re.sub(tag_remover, '', text)
-            text = tp.correct_text(text, force_english=force_english)
+            text = tp.correct_text(text)
         else:
             continue
         wordcount += len(text.split(" "))
@@ -58,7 +60,7 @@ def read_texts(texts, files, outpath, lang):
     reader = Reader(outpath, lang=lang)
     audio_len = 0
     for text, name in zip(texts, files):
-        _,t = reader.tts(text, name)
+        _, t = reader.tts(text, name)
         audio_len += t
     return audio_len
 
@@ -102,14 +104,13 @@ def main():
 
 def run(in_path, out_path, lang):
     start_time = time.time()
-    force_english: bool = False
-    texts, files, wordcount = get_texts(in_path, lang, force_english)
+    texts, files, wordcount = get_texts(in_path, lang)
     audio_time = read_texts(texts, files, out_path, lang)
     time_taken = time.time() - start_time
     with open('time_data.csv', 'a') as f:
         writer = csv.writer(f)
         writer.writerow([wordcount, time_taken, audio_time])
-    print(f"> Read {wordcount} words in {time_taken} seconds with a real time factor of {time_taken/audio_time}")
+    print(f"> Read {wordcount} words in {time_taken} seconds with a real time factor of {time_taken / audio_time}")
     return
 
 

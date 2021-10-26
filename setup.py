@@ -1,19 +1,20 @@
 from setuptools import setup
+
 with open('requirements.txt', 'r') as f:
     reqs = f.read()
-#with open('LICENSE', 'r') as f:
+# with open('LICENSE', 'r') as f:
 #    legal = f.read()
 with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 setup(
     name='reading4listeners',
-    version='0.0.4a',
+    version='0.0.4a2',
     packages=['r4l'],
     url='https://github.com/CypherousSkies/reading-for-listeners',
     project_urls={
         "Bug Tracker": "https://github.com/CypherousSkies/reading-for-listeners/issues",
     },
-    #license=legal,
+    # license=legal,
     license='AGPL-3',
     author='CypherousSkies',
     author_email="5472563+CypherousSkies@users.noreply.github.com",
