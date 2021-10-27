@@ -57,6 +57,7 @@ class Reader:
             channels=1
         )
         audio.export(fout, format="mp3")
+        print(f"| > Wrote {fout}")
         return fout, len(audio) / 1000
 
     def tts(self, text, fname):
@@ -94,6 +95,7 @@ class Reader:
             self._write_to_file(wav, fname + str(splits))
             splits += 1
             wav = None
+        if splits > 0:
             audio = AudioSegment.silent()
             print(f"> Collecting {splits} files to final mp3")
             for i in tqdm(range(splits)):
@@ -102,7 +104,7 @@ class Reader:
                 os.remove(file)
             audio_time = len(audio) / 1000
             audio.export(self.outpath + fname + '.mp3', format='mp3')
-        elif splits == 0:
+        elif wav is not None and splits == 0:
             file, audio_time = self._write_to_file(wav, fname)
         else:
             raise Exception("Somehow r4l.util.reader.wav is None")

@@ -20,14 +20,14 @@ Unfortunately, for now I only have a cli which is only been tested on linux. Not
 ## Install
 
 ### Windows
-The easiest way of doing this is by installing [WSL](https://docs.microsoft.com/en-us/windows/wsl/) with Ubuntu and follow the Ubuntu/debian instructions.
+The "easiest" way of doing this is by installing [WSL](https://docs.microsoft.com/en-us/windows/wsl/) with Ubuntu and follow the Ubuntu/debian instructions.
 
 If you're fancy and know how to python on windows, tell me how it goes and how you did it!
 
 Note: unfortunately, it's hard to set up gpu stuff for WSL, and even then only really works for CUDA (NVIDIA) cards, which I have no way of testing as of now (not that I could test any gpu stuff now, but that's beyond the point).
 
 ### Mac
-Gotta say, I have no idea how to get all the dependencies on mac. A cursory glance says that `brew` or `port` should be able to get most of them, but I have no idea about their availability. If you have a mac and figured this out, let me know how you did it!
+Gotta say, I have no idea how to get all the dependencies (see ubuntu/debian) on mac. A cursory glance says that `brew` or `port` should be able to get most of them, but I have no idea about their availability. If you have a mac and figured this out, let me know how you did it!
 
 ### Ubuntu/Debian
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
@@ -60,11 +60,11 @@ get [pytorch](https://pytorch.org)
 Takes ~2-3GB of disk space for install
 
 ## Usage
-`r4l [--in_path in/] [--out_path out/] [--lang en]` runs the suite of scanning and correction on all compatible files in the directory `in/` and  outputs mp3 files to `out/` using the language `en`.
+`r4l [--in_path in/] [--out_path out/] [--lang en]` runs the suite of scanning and correction on all compatible files in the directory `in/` and  outputs mp3 files to `out/` using the language `en` (square brackets denoting optional parameters with default values).
 
 Run `r4l --list_langs` to list supported languages
 
-This program uses a lot of memory so I'd advise expanding your swap size by ~10GB (for debian use fixswap.sh)
+~~This program uses a lot of memory so I'd advise expanding your swap size by ~10GB (for debian use `fixswap.sh`)~~ (This should be fixed now, but if it runs out of memory/crashes randomly, increase swap size)
 
 ### Benchmarks
 On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap) takes `0.124*(word count)-3.8` seconds (r^2=0.942,n=6), which is actually pretty good, clocking in at around 10 words per second with some overhead.

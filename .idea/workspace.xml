@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="Added the starts of using TrOCR">
-      <change beforePath="$PROJECT_DIR$/.idea/reading-for-listeners.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/reading-for-listeners.iml" afterDir="false" />
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="0.0.4 pre-release cleanup, quality of life improvements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linreg.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/.models.json" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/.models.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/bin/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/bin/cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/html/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/html/main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/html/texts.html" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/html/texts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/main-jp.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/main-jp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/ocr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/reader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -207,7 +197,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634256649577</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="0.0.4 pre-release cleanup, quality of life improvements">
+      <created>1635291429541</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1635291429542</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -236,6 +233,7 @@
     <MESSAGE value="OK so the problem is the header/footer issue again. I could keep trying to fix it by incremental solutions, but I think the answer has to be using openCV to find the body of the text" />
     <MESSAGE value="added real time factor data statement for analytics" />
     <MESSAGE value="Added the starts of using TrOCR" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added the starts of using TrOCR" />
+    <MESSAGE value="0.0.4 pre-release cleanup, quality of life improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="0.0.4 pre-release cleanup, quality of life improvements" />
   </component>
 </project>
