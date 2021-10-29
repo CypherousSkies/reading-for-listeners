@@ -21,9 +21,7 @@ def split_into_sentences(string):
     return sentences
 
 
-# later i'll figure out how to load TTS's .models.json
-
-manager = ModelManager(Path(__file__).parent / "../.models.json")
+manager = ModelManager()
 
 
 class Reader:
@@ -50,22 +48,18 @@ class Reader:
         wav = wav * (32767 / max(0.01, np.max(np.abs(wav))))
         wav = wav.astype(np.int16)
         fout = self.outpath + fname + '.mp3'
-        audio = AudioSegment(
+        AudioSegment(
             wav.tobytes(),
             frame_rate=self.synth.ap.sample_rate,
             sample_width=wav.dtype.itemsize,
             channels=1
-        )
-        audio.export(fout, format="mp3")
+        ).export(fout, format="mp3")
         print(f"| > Wrote {fout}")
-        return fout, len(audio) / 1000
+        return fout, len(wav)/self.synth.ap.sample_rate
 
-    def tts(self, text, fname):
+    def tts(self, text, fname, manual_swap=True):
         print(f"> Reading {fname}")
         sens = split_into_sentences(text)  # overrides TTS's uh, underwhelming, sentence splitter
-        # do it again because uh french is not happy
-        # sens = [self.synth.split_into_sentences(sen) for sen in sens]
-        # sens = [sen for l in sens for sen in l]
         sens = [s for s in sens if len(s.split(' ')) >= 2]  # remove empty sentences
         wav = None
         mem_tot = psutil.virtual_memory().total
@@ -74,21 +68,21 @@ class Reader:
         splits = 0
         for sen in tqdm(sens):
             self.synth.tts_model.decoder.max_decoder_steps = len(sen) * self.decoder_mult  # override decoder steps
-            # mem_tot = psutil.virtual_memory().total
-            # print(mem_tot)
             sen = " ".join([s for s in self.synth.split_into_sentences(sen) if
                             len(s.split(" ")) >= 2])  # TTS crashes on null sentences. this fixes that i think
             if wav is None:
                 wav = np.array(self.synth.tts(sen))
             else:
                 wav = np.append(wav, self.synth.tts(sen))
-            mem_use = psutil.Process().memory_info().rss
-            print(f"> {100 * mem_use / mem_tot}% memory used")
-            # Is the current RAM usage too high? write wav to file
-            if mem_use / mem_tot > self.max_ram_percent:
-                self._write_to_file(wav, fname + str(splits))
-                splits += 1
-                wav = None
+            if manual_swap:
+                mem_tot = psutil.virtual_memory().total
+                mem_use = psutil.Process().memory_info().rss
+                print(f"> {100 * mem_use / mem_tot}% memory used")
+                # Is the current RAM usage too high? write wav to file
+                if mem_use / mem_tot > self.max_ram_percent:
+                    self._write_to_file(wav, fname + str(splits))
+                    splits += 1
+                    wav = None
         audio_time = 0
         file = ""
         if wav is not None and splits > 0:
