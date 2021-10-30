@@ -7,9 +7,9 @@ import re
 import sys
 import time
 
-from r4l import lang_dict
-from r4l.util.reader import Reader
-from r4l.util.text import TextProcessor
+from reading4listeners import lang_dict
+from reading4listeners.util.reader import Reader
+from reading4listeners.util.text import TextProcessor
 
 os.environ["TOKENIZERS_PARALLELISM"] = "False"
 tag_remover = re.compile('<.*?>')
@@ -71,10 +71,10 @@ def main():
                     """In the interests of user-friendliness, this cli will be kept pretty bare-bones"""
                     """
         Basic usage:
-        $ r4l [--in_path in/] [--out_path out/] [--lang en]
+        $ reading4listeners [--in_path in/] [--out_path out/] [--lang en]
         Converts pdfs, txts, muses in the folder "in/" and output mp3s to the folder "out/" with the primary language set to "en"
         List languages:
-        $ r4l --list_languages
+        $ reading4listeners --list_languages
         Lists available languages (Warning! Not tested on non-latin scripts!)
             """
     )

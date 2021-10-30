@@ -8,8 +8,8 @@ with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 setup(
     name='reading4listeners',
-    version='0.0.4',
-    packages=['r4l'],
+    version='0.0.4post1',
+    packages=['reading4listeners'],
     url='https://github.com/CypherousSkies/reading-for-listeners',
     project_urls={
         "Bug Tracker": "https://github.com/CypherousSkies/reading-for-listeners/issues",
@@ -22,5 +22,5 @@ setup(
     long_description=readme,
     long_description_content_type="text/markdown",
     install_requires=reqs,
-    entry_points={"console_scripts": ["r4l = r4l.bin.cli:main"], }
+    entry_points={"console_scripts": ["reading4listeners = reading4listeners.bin.cli:main"], }
 )

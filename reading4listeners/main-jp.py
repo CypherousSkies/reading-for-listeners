@@ -7,7 +7,7 @@ from TTS.utils.manage import ModelManager
 from TTS.utils.synthesizer import Synthesizer
 from pydub import AudioSegment
 
-from r4l.util.text import TextProcessor
+from reading4listeners.util.text import TextProcessor
 
 path = ".models.json"
 manager = ModelManager(path)

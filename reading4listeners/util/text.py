@@ -9,7 +9,7 @@ from ocrmypdf import ocr
 from spellchecker import SpellChecker
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 
-from r4l import lang_dict
+from reading4listeners import lang_dict
 
 
 def string_metric(str1, str2):

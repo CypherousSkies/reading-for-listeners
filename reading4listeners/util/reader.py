@@ -9,7 +9,7 @@ from TTS.utils.synthesizer import Synthesizer
 from pydub import AudioSegment
 from tqdm import tqdm
 
-from r4l import lang_dict
+from reading4listeners import lang_dict
 
 
 def split_into_sentences(string):
@@ -101,6 +101,6 @@ class Reader:
         elif wav is not None and splits == 0:
             file, audio_time = self._write_to_file(wav, fname)
         else:
-            raise Exception("Somehow r4l.util.reader.wav is None")
+            raise Exception("Somehow reading4listeners.util.reader.wav is None")
         print(f"> Saved as {file}.mp3")
         return self.outpath + fname + '.mp3', audio_time

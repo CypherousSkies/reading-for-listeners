@@ -3,8 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="0.0.4 pre-release cleanup, quality of life improvements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/.models.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/r4l/util/reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/bin/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/bin/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/html/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/html/main.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/html/texts.html" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/html/texts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/main-jp.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/main-jp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ocr.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/text.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/r4l/util/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ui.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/time_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/time_data.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -31,7 +42,7 @@
     </file-type-list>
   </component>
   <component name="NamedScopeManager">
-    <scope name="r4l-no-venv" pattern="file[reading-for-listeners]:r4l//*||file[reading-for-listeners]:tests//*||file:setup.py" />
+    <scope name="r4l-no-venv" pattern="file[reading-for-listeners]:reading4listeners//*||file[reading-for-listeners]:tests//*||file:setup.py" />
   </component>
   <component name="ProjectId" id="1z3nUEw5DlJRf4mmoAGnEgDvgxO" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
