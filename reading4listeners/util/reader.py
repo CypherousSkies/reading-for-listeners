@@ -97,10 +97,11 @@ class Reader:
                 audio += AudioSegment.from_mp3(file)
                 os.remove(file)
             audio_time = len(audio) / 1000
-            audio.export(self.outpath + fname + '.mp3', format='mp3')
+            file = self.outpath + fname + '.mp3'
+            audio.export(file, format='mp3')
         elif wav is not None and splits == 0:
             file, audio_time = self._write_to_file(wav, fname)
         else:
             raise Exception("Somehow reading4listeners.util.reader.wav is None")
-        print(f"> Saved as {file}.mp3")
-        return self.outpath + fname + '.mp3', audio_time
+        print(f"> Saved as {file}")
+        return file, audio_time

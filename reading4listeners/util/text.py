@@ -32,8 +32,13 @@ spec_re = re.compile("|".join(spec.keys()))
 
 class TextProcessor:
     def __init__(self, bert_model="distilbert-base-multilingual-cased", langs="en"):
-        self.tokenizer = AutoTokenizer.from_pretrained(bert_model)
-        self.model = AutoModelForMaskedLM.from_pretrained(bert_model)
+        try: # Use cached version if possible (making offline-mode default)
+            self.tokenizer = AutoTokenizer.from_pretrained(bert_model,local_files_only=True)
+            self.model = AutoModelForMaskedLM.from_pretrained(bert_model,local_files_only=True)
+        except: # Models not cached
+            print("> Downloading BERT models")
+            self.tokenizer = AutoTokenizer.from_pretrained(bert_model,force_download=True)
+            self.model = AutoModelForMaskedLM.from_pretrained(bert_model,force_download=True)
         self.sc = SpellChecker(distance=1, language=langs)
         self.langs = langs
         if langs is list:

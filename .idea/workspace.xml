@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="0.0.4 pre-release cleanup, quality of life improvements">
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/bin/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/bin/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/html/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/html/main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/html/texts.html" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/html/texts.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/main-jp.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/main-jp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ocr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/reader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/text.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/r4l/util/ui.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ui.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/time_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/time_data.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +40,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/venv/bin/r4l" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -215,7 +201,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635291429542</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now">
+      <created>1635626358008</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1635626358009</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -245,6 +238,7 @@
     <MESSAGE value="added real time factor data statement for analytics" />
     <MESSAGE value="Added the starts of using TrOCR" />
     <MESSAGE value="0.0.4 pre-release cleanup, quality of life improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="0.0.4 pre-release cleanup, quality of life improvements" />
+    <MESSAGE value="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now" />
+    <option name="LAST_COMMIT_MESSAGE" value="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now" />
   </component>
 </project>
