@@ -67,8 +67,11 @@ Run `r4l --list_langs` to list supported languages
 ~~This program uses a lot of memory so I'd advise expanding your swap size by ~10GB (for debian use `fixswap.sh`)~~ (This should be fixed now, but if it runs out of memory/crashes randomly, increase swap size)
 
 ### Benchmarks
-On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap) takes `0.124*(word count)-3.8` seconds (r^2=0.942,n=6), which is actually pretty good, clocking in at around 10 words per second with some overhead.
-Unfortunately, almost all of the pdfs I'm experimenting with are in the 10s of thousands of words, which clocks in at around half an hour, which is less good for getting through my backlog. Ah well.
+On my current setup (4 intel i7 8th gen cores, no gpu, debian 10, 5gb ram+7gb swap), the english setting will read around 440 words/min (N=21,R^2=0.97) into a 175 word/min audio file.
+So r4l takes ~11.4 minutes to read a 5000 word file, which will take ~28.5 mins to listen to irl.
+
+Unfortunately, I can't speed it up much beyond this for CPU-only systems.
+The main sticking point was that file access is slow, but with improved RAM-awareness, the major slow-down is BERT and TTS, which are both designed to run quickly on G/TPU machines.
 
 ## Under the Hood
 At a high level, here's how this works:
