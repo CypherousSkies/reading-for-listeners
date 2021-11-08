@@ -7,6 +7,7 @@ import torch
 from nltk.tag import pos_tag
 from ocrmypdf import ocr
 from spellchecker import SpellChecker
+from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 
 from reading4listeners import lang_dict
@@ -32,13 +33,13 @@ spec_re = re.compile("|".join(spec.keys()))
 
 class TextProcessor:
     def __init__(self, bert_model="distilbert-base-multilingual-cased", langs="en"):
-        try: # Use cached version if possible (making offline-mode default)
-            self.tokenizer = AutoTokenizer.from_pretrained(bert_model,local_files_only=True)
-            self.model = AutoModelForMaskedLM.from_pretrained(bert_model,local_files_only=True)
-        except: # Models not cached
+        try:  # Use cached version if possible (making offline-mode default)
+            self.tokenizer = AutoTokenizer.from_pretrained(bert_model, local_files_only=True)
+            self.model = AutoModelForMaskedLM.from_pretrained(bert_model, local_files_only=True)
+        except:  # Models not cached
             print("> Downloading BERT models")
-            self.tokenizer = AutoTokenizer.from_pretrained(bert_model,force_download=True)
-            self.model = AutoModelForMaskedLM.from_pretrained(bert_model,force_download=True)
+            self.tokenizer = AutoTokenizer.from_pretrained(bert_model, force_download=True)
+            self.model = AutoModelForMaskedLM.from_pretrained(bert_model, force_download=True)
         self.sc = SpellChecker(distance=1, language=langs)
         self.langs = langs
         if langs is list:
@@ -136,7 +137,7 @@ class TextProcessor:
         normins = list(torch.split(inids, max_tokens, dim=1))
         normats = list(torch.split(attid, max_tokens, dim=1))
         print("> running BERT")
-        for inz, atz in zip(normins, normats):
+        for inz, atz in tqdm(list(zip(normins, normats))):
             toktxt = {"input_ids": inz, "attention_mask": atz}
             mask_token_ids = torch.where(toktxt["input_ids"] == self.tokenizer.mask_token_id)[1].tolist()
             if mask_token_ids == []:

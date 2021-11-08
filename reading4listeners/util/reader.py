@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import nltk
 import numpy as np
@@ -25,7 +24,7 @@ manager = ModelManager()
 
 
 class Reader:
-    def __init__(self, outpath, lang='en', tts_name=None, voc_name=None, decoder_mult=3, max_ram_percent=0.6):
+    def __init__(self, outpath, lang='en', tts_name=None, voc_name=None, decoder_mult=3, max_ram_percent=0.7):
         self.outpath = outpath
         self.decoder_mult = decoder_mult
         self.max_ram_percent = max_ram_percent
@@ -55,7 +54,7 @@ class Reader:
             channels=1
         ).export(fout, format="mp3")
         print(f"| > Wrote {fout}")
-        return fout, len(wav)/self.synth.ap.sample_rate
+        return fout, len(wav) / self.synth.ap.sample_rate
 
     def tts(self, text, fname, manual_swap=True):
         print(f"> Reading {fname}")
@@ -67,9 +66,15 @@ class Reader:
         audio_time = 0
         splits = 0
         for sen in tqdm(sens):
+            if sen is "":
+                continue
+            if manual_swap:
+                mem_last = psutil.Process().memory_info().rss
             self.synth.tts_model.decoder.max_decoder_steps = len(sen) * self.decoder_mult  # override decoder steps
             sen = " ".join([s for s in self.synth.split_into_sentences(sen) if
                             len(s.split(" ")) >= 2])  # TTS crashes on null sentences. this fixes that i think
+            if sen is "" or sen is " ":
+                continue
             if wav is None:
                 wav = np.array(self.synth.tts(sen))
             else:
@@ -77,9 +82,10 @@ class Reader:
             if manual_swap:
                 mem_tot = psutil.virtual_memory().total
                 mem_use = psutil.Process().memory_info().rss
-                print(f"> {100 * mem_use / mem_tot}% memory used")
-                # Is the current RAM usage too high? write wav to file
-                if mem_use / mem_tot > self.max_ram_percent:
+                print(f"| {100 * mem_use / mem_tot}% memory used")
+                print(f"| {100 * (mem_use - mem_last) / mem_last}% more than last it")
+                # Is the current RAM usage too high by % or has RAM usage stopped (e.g. SWAP is being used)? write sound to file
+                if mem_use / mem_tot > self.max_ram_percent or 1.01 * mem_use <= mem_last:
                     self._write_to_file(wav, fname + str(splits))
                     splits += 1
                     wav = None

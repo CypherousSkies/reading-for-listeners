@@ -8,7 +8,7 @@ with open('README.md', 'r', encoding="utf-8") as f:
     readme = f.read()
 setup(
     name='reading4listeners',
-    version='0.0.4post1',
+    version='0.0.4post2',
     packages=['reading4listeners'],
     url='https://github.com/CypherousSkies/reading-for-listeners',
     project_urls={
