@@ -1,14 +1,15 @@
 import math
-# from transformers import TrOCRProcessor, VisionEncoderDecoderModel
+from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import random
 
 import cv2
 import numpy as np
 from pdf2image import convert_from_path
+from tqdm import tqdm
 
 
 # https://www.geeksforgeeks.org/text-detection-and-extraction-using-opencv-and-ocr/
-
+# TODO: test sample_borders & integrate it into TrOCR pipeline
 def sample_borders(pdfpath):
     print("converting to imgs")
     imgs = convert_from_path(pdfpath)
@@ -57,15 +58,33 @@ def border(img):
     return p1, p2
 
 
-"""
 class TrOCR:
     def __init__(self, model_name="microsoft/trocr-base-printed"):
-        self.processor = TrOCRProcessor.from_pretrained(model_name)
-        self.model = VisionEncoderDecoderModel.from_pretrained(model_name)
+        try:  # Use cached version if possible (making offline-mode default)
+            self.processor = TrOCRProcessor.from_pretrained(model_name, local_files_only=True)
+            self.model = VisionEncoderDecoderModel.from_pretrained(model_name, local_files_only=True)
+        except:  # Models not cached
+            print("> Downloading TrOCR models")
+            self.processor = TrOCRProcessor.from_pretrained(model_name, force_download=True)
+            self.model = VisionEncoderDecoderModel.from_pretrained(model_name, force_download=True)
+
+    def _get_pages(self, fpath):
+        imgs = convert_from_path(fpath)
+        # TODO: Crop imgs to just main body of text
+        return imgs
 
     def _trocr(self, image):
         pixel_values = self.processor(images=image, return_tensors="pt").pixel_values
         generated_ids = self.model.generate(pixel_values)
         generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         return generated_text
-"""
+
+    def extract_text(self, fpath):
+        if fpath[-3:] != 'pdf':
+            raise Exception("TrOCR is only defined on PDFs")
+        pages = self._get_pages(fpath)
+        text = ""
+        for page in tqdm(pages):
+            gen_text = self._trocr(page)
+            text += gen_text
+        return text

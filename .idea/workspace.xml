@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="pushing 0.0.4post2 stuff (i think, it's been a few days and i haven't looked closely)">
+      <change beforePath="$PROJECT_DIR$/reading4listeners/util/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ocr.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +208,14 @@
       <option name="project" value="LOCAL" />
       <updated>1635626358009</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="pushing 0.0.4post2 stuff (i think, it's been a few days and i haven't looked closely)">
+      <created>1636347740200</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1636347740200</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -239,6 +246,7 @@
     <MESSAGE value="Added the starts of using TrOCR" />
     <MESSAGE value="0.0.4 pre-release cleanup, quality of life improvements" />
     <MESSAGE value="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now" />
-    <option name="LAST_COMMIT_MESSAGE" value="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now" />
+    <MESSAGE value="pushing 0.0.4post2 stuff (i think, it's been a few days and i haven't looked closely)" />
+    <option name="LAST_COMMIT_MESSAGE" value="pushing 0.0.4post2 stuff (i think, it's been a few days and i haven't looked closely)" />
   </component>
 </project>
