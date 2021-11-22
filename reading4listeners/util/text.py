@@ -49,11 +49,14 @@ class TextProcessor:
         print("> BERT initialized")
 
     # get and correct text
-    def loadpdf(self, filename, sesspath, force=True):
+    def loadpdf(self, filename, sesspath, force=True, skip_correction=False):
         text0 = self._load(filename, sesspath, force)
         os.remove(sesspath + "tmp/tmp.pdf")
         os.remove(sesspath + "tmp/tmp.txt")
-        return self.correct_text(text0)
+        if skip_correction:
+            return text0
+        else:
+            return self.correct_text(text0)
 
     def correct_text(self, text0):
         text, text_original, incorrect = self._preprocess(text0)

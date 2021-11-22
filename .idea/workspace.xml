@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="Started TrOCR integration -- will investigate limitations after i get it working">
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="updated readme">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reading4listeners/bin/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reading4listeners/util/reader.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/reader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reading4listeners/util/text.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/text.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/time_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/time_data.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +43,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TODO_SCOPE" value="Only changes uncommitted to VCS in all files" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/venv/bin/r4l" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
@@ -223,7 +227,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636350305977</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="updated readme">
+      <created>1636352643997</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1636352643997</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -256,6 +267,7 @@
     <MESSAGE value="oops forgot that not everything is cloned lol&#10;hopefully that's fixed now" />
     <MESSAGE value="pushing 0.0.4post2 stuff (i think, it's been a few days and i haven't looked closely)" />
     <MESSAGE value="Started TrOCR integration -- will investigate limitations after i get it working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started TrOCR integration -- will investigate limitations after i get it working" />
+    <MESSAGE value="updated readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated readme" />
   </component>
 </project>

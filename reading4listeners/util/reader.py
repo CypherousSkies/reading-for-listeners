@@ -24,7 +24,7 @@ manager = ModelManager()
 
 
 class Reader:
-    def __init__(self, outpath, lang='en', tts_name=None, voc_name=None, decoder_mult=3, max_ram_percent=0.7):
+    def __init__(self, outpath, lang='en', tts_name=None, voc_name=None, decoder_mult=3, max_ram_percent=0.6):
         self.outpath = outpath
         self.decoder_mult = decoder_mult
         self.max_ram_percent = max_ram_percent

@@ -29,7 +29,7 @@ def get_ext(filename):
     return filename.split(".")[-1]
 
 
-def get_texts(sesspath, lang):
+def get_texts(sesspath, lang, skip_correction):
     setup_time = time.time()
     tp = TextProcessor(langs=lang)
     setup_time = time.time()-setup_time
@@ -42,16 +42,18 @@ def get_texts(sesspath, lang):
         print(f"> Loading {filename}")
         start = time.time()
         if get_ext(filename) == 'pdf':
-            text = tp.loadpdf(filename, sesspath, force=True)
+            text = tp.loadpdf(filename, sesspath, force=True, skip_correction=skip_correction)
         elif get_ext(filename) == 'txt':
             with open(sesspath + filename, 'rt') as f:
                 text = f.read()
-            text = tp.correct_text(text)
+            if not skip_correction:
+                text = tp.correct_text(text)
         elif get_ext(filename) == 'muse':
             with open(sesspath + filename, 'rt') as f:
                 text = f.read()
             text = re.sub(tag_remover, '', text)
-            text = tp.correct_text(text)
+            if not skip_correction:
+                text = tp.correct_text(text)
         else:
             continue
         run_times[filename] = time.time()-start+setup_time
@@ -61,9 +63,9 @@ def get_texts(sesspath, lang):
     print("> Done text preprocessing")
     return texts, files, word_counts, run_times
 
-def read_texts(texts, files, outpath, lang):
+def read_texts(texts, files, outpath, lang, max_mem, decoder_mult):
     setup_time = time.time()
-    reader = Reader(outpath, lang=lang)
+    reader = Reader(outpath, lang=lang, decoder_mult=decoder_mult, max_ram_percent=max_mem)
     setup_time = time.time()-setup_time
     run_times = {}
     audio_times = {}
@@ -82,23 +84,32 @@ def main():
                     """In the interests of user-friendliness, this cli will be kept pretty bare-bones"""
                     """
         Basic usage:
+        
         $ reading4listeners [--in_path in/] [--out_path out/] [--lang en]
+        
         Converts pdfs, txts, muses in the folder "in/" and output mp3s to the folder "out/" with the primary language set to "en"
         List languages:
+        
         $ reading4listeners --list_languages
+        
         Lists available languages (Warning! Not tested on non-latin scripts!)
             """
     )
     parser.add_argument("--in_path", type=str, default="in/", help="Path containing files to be converted.")
     parser.add_argument("--out_path", type=str, default="out/", help="Output path.")
     parser.add_argument("--lang", type=str, default="en", help="Two-letter language code.")
+    parser.add_argument("--max_mem", type=float, default=60, help="Upper bound of memory usage (as % of RAM)")
+    parser.add_argument("--decoder_mult", type=int, default=3, help="Sets number of times the max decoder steps is "
+                                                                    "relative to the length of a sentence (set to a "
+                                                                    "smaller number if you get slurred speech, "
+                                                                    "increase if sentences are getting cut off)")
     parser.add_argument(
         "--list_langs",
         type=str2bool,
         nargs="?",
         const=True,
         default=False,
-        help="list available languages.",
+        help="List available languages.",
     )
     parser.add_argument(
         "--collect_time_data",
@@ -106,7 +117,23 @@ def main():
         nargs="?",
         const=True,
         default=False,
-        help="write time taken data to `time_data.csv` for analysis",
+        help="Write time taken data to `time_data.csv` for analysis",
+    )
+    parser.add_argument(
+        "--skip_correction",
+        type=str2bool,
+        nargs="?",
+        const=True,
+        default=False,
+        help="Skip using BERT to improve OCR results",
+    )
+    parser.add_argument(
+        "--use_TrOCR",
+        type=str2bool,
+        nargs="?",
+        const=True,
+        default=False,
+        help="Use TrOCR instead of tesseract[+BERT] (NYI)",
     )
     args = parser.parse_args()
     if args.list_langs:
@@ -117,14 +144,14 @@ def main():
         parser.parse_args(["-h"])
     if not os.path.isdir(args.out_path):
         os.mkdir(args.out_path)
-    run(args.in_path, args.out_path, args.lang, args.collect_time_data)
+    run(args.in_path, args.out_path, args.lang, args.collect_time_data, args.max_mem, args.decoder_mult, args.skip_BERT)
     return
 
 
-def run(in_path, out_path, lang, time_data):
+def run(in_path, out_path, lang, time_data, max_mem, decoder_mult, skip_correction):
     start_time = time.time()
-    texts, files, word_counts, run_t_times = get_texts(in_path, lang)
-    audio_times, run_r_times = read_texts(texts, files, out_path, lang)
+    texts, files, word_counts, run_t_times = get_texts(in_path, lang, skip_correction)
+    audio_times, run_r_times = read_texts(texts, files, out_path, lang, max_mem, decoder_mult)
     time_taken = time.time() - start_time
     if time_data:
         with open('time_data.csv', 'a') as f:
