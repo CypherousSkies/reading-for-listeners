@@ -1,4 +1,4 @@
-TTS
+TTS==0.5.0
 nltk
 psutil
 pydub
@@ -11,3 +11,4 @@ opencv-python
 pdf2image
 numpy
 scipy
+pdftotext

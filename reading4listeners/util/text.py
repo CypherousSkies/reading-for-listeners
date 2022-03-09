@@ -9,7 +9,7 @@ from ocrmypdf import ocr
 from spellchecker import SpellChecker
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForMaskedLM
-
+from pdftotext import PDF
 from reading4listeners import lang_dict
 
 
@@ -49,10 +49,15 @@ class TextProcessor:
         print("> BERT initialized")
 
     # get and correct text
-    def loadpdf(self, filename, sesspath, force=True, skip_correction=False):
-        text0 = self._load(filename, sesspath, force)
-        os.remove(sesspath + "tmp/tmp.pdf")
-        os.remove(sesspath + "tmp/tmp.txt")
+    def loadpdf(self, filename, sesspath, force=True, skip_correction=False, skip_ocr=False):
+        if skip_ocr:
+            with open(sesspath + filename, rb) as f:
+                pdf = PDF(f)
+                text0 = "\n\n".join(pdf)
+        else:
+            text0 = self._load(filename, sesspath, force)
+            os.remove(sesspath + "tmp/tmp.pdf")
+            os.remove(sesspath + "tmp/tmp.txt")
         if skip_correction:
             return text0
         else:

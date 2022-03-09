@@ -66,14 +66,14 @@ class Reader:
         audio_time = 0
         splits = 0
         for sen in tqdm(sens):
-            if sen is "":
+            if sen == "":
                 continue
             if manual_swap:
                 mem_last = psutil.Process().memory_info().rss
             self.synth.tts_model.decoder.max_decoder_steps = len(sen) * self.decoder_mult  # override decoder steps
             sen = " ".join([s for s in self.synth.split_into_sentences(sen) if
                             len(s.split(" ")) >= 2])  # TTS crashes on null sentences. this fixes that i think
-            if sen is "" or sen is " ":
+            if sen == "" or sen == " ":
                 continue
             if wav is None:
                 wav = np.array(self.synth.tts(sen))
