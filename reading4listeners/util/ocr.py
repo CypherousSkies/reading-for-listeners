@@ -2,6 +2,7 @@ import math
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import random
 
+from PIL import Image
 import cv2
 import numpy as np
 from pdf2image import convert_from_path
@@ -9,6 +10,7 @@ from tqdm import tqdm
 
 
 # https://www.geeksforgeeks.org/text-detection-and-extraction-using-opencv-and-ocr/
+# https://blog.42mate.com/opencv-tesseract-is-a-powerful-combination/
 # TODO: test sample_borders & integrate it into TrOCR pipeline
 def sample_borders(pdfpath):
     print("converting to imgs")
@@ -27,7 +29,7 @@ def text_boxes(img):
     # Preprocessing the image starts
 
     # Convert the image to gray scale
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(np.asarray(img), cv2.COLOR_BGR2GRAY)
 
     # Performing OTSU threshold
     ret, thresh1 = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU | cv2.THRESH_BINARY_INV)
@@ -47,7 +49,7 @@ def text_boxes(img):
                                            cv2.CHAIN_APPROX_NONE)
 
     boxes = [cv2.boundingRect(cnt) for cnt in contours]
-    print(boxes)
+    #print(boxes)
     return boxes
 
 def border(boxes):
@@ -76,18 +78,28 @@ class TrOCR:
         return imgs
 
     def _trocr(self, image):
-        generated_text = ""
-        img = image.copy()
-        for box in text_boxes(image):
+        #generated_text = ""
+        img = np.asarray(image.copy())
+        #crops = np.array([])
+        crops = []
+        print("> Cropping page into lines")
+        for box in tqdm(text_boxes(image)):
             x,y,w,h = box
-            rect = cv2.rectangle(im2, (x, y), (x + w, y + h), (0, 255, 0), 2)
-            cropped = im2[y:y + h, x:x + w]
-            pixel_values = self.processor(images=cropped, return_tensors="pt").pixel_values
-            generated_ids = self.model.generate(pixel_values)
-            del pixel_values
-            generated_text += self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
-            del generated_ids
+            rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            crops.append(Image.fromarray(img[y:y + h, x:x + w]).convert("RGB"))
+        print("> Done Cropping")
+        print("> Running TrOCR")
+        pixel_values = self.processor(images=crops, return_tensors="pt").pixel_values
+        print("| > loaded pixels")
+        del crops
         del img
+        generated_ids = self.model.generate(pixel_values)
+        print("| > generated tokens")
+        del pixel_values
+        generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        print("| > decoded tokens")
+        del generated_ids
+        print(generated_text)
         return generated_text
 
     def extract_text(self, fpath):

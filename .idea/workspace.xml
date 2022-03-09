@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="smol qol push, added a skip_ocr function because I've been using that a lot">
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reading4listeners/bin/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/cli.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/reading4listeners/util/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ocr.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
@@ -247,7 +248,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646861041244</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance">
+      <created>1646864008624</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1646864008624</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -282,6 +290,7 @@
     <MESSAGE value="Started TrOCR integration -- will investigate limitations after i get it working" />
     <MESSAGE value="updated readme" />
     <MESSAGE value="smol qol push, added a skip_ocr function because I've been using that a lot" />
-    <option name="LAST_COMMIT_MESSAGE" value="smol qol push, added a skip_ocr function because I've been using that a lot" />
+    <MESSAGE value="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance" />
   </component>
 </project>
