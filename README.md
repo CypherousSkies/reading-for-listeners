@@ -19,17 +19,17 @@ Unfortunately, for now I only have a cli which is only been tested on linux. Not
 
 ## Install
 
-### Windows
+### Windows (WIP)
 The "easiest" way of doing this is by installing [WSL](https://docs.microsoft.com/en-us/windows/wsl/) with Ubuntu and follow the Ubuntu/debian instructions.
 
 If you're fancy and know how to python on windows, tell me how it goes and how you did it!
 
 Note: unfortunately, it's hard to set up gpu stuff for WSL, and even then only really works for CUDA (NVIDIA) cards, which I have no way of testing as of now (not that I could test any gpu stuff now, but that's beyond the point).
 
-### Mac
+### Mac (WIP)
 Gotta say, I have no idea how to get all the dependencies (see ubuntu/debian) on mac. A cursory glance says that `brew` or `port` should be able to get most of them, but I have no idea about their availability. If you have a mac and figured this out, let me know how you did it!
 
-### Ubuntu/Debian
+### Ubuntu/Debian (tested)
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`
 
 Make and activate a [virtual environment](https://docs.python.org/3/tutorial/venv.html), get [pytorch](https://pytorch.org), then run
@@ -38,7 +38,7 @@ Make and activate a [virtual environment](https://docs.python.org/3/tutorial/ven
 
 And you're all set to run `r4l` (see below for usage info)
 
-### Install from source
+### Install from source (debian)
 On debian, run
 
 `sudo apt install -y python3 python3-venv espeak ffmpeg tesseract-ocr-all python3-dev libenchant-dev libpoppler-cpp-dev pkg-config libavcodec libavtools ghostscript poppler-utils`

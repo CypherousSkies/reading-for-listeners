@@ -16,15 +16,14 @@ def sample_borders(pdfpath):
     print("sampling pages")
     imgs = random.sample(imgs, math.ceil(len(imgs) / 10))  # sample a 10% of pages to see what the shape looks like
     imgs = [np.array(img)[:, :, ::-1].copy() for img in imgs]  # convert to opencv
-    borders = [border(img) for img in imgs]
+    borders = [border(text_boxes(img)) for img in imgs]
     print(borders)
     p1 = (min(p1[0] for p1, _ in borders), min(p1[1] for p1, _ in borders))
     p2 = (max(p2[0] for _, p2 in borders), max(p2[1] for _, p2 in borders))
     print(p1, p2)
     return p1, p2
 
-
-def border(img):
+def text_boxes(img):
     # Preprocessing the image starts
 
     # Convert the image to gray scale
@@ -49,6 +48,9 @@ def border(img):
 
     boxes = [cv2.boundingRect(cnt) for cnt in contours]
     print(boxes)
+    return boxes
+
+def border(boxes):
     mean_width = sum(w for _, _, w, _ in boxes) / len(boxes)
     tolerance = 0.1
     boxes = [(x, y, w, h) for x, y, w, h in boxes if
@@ -74,9 +76,18 @@ class TrOCR:
         return imgs
 
     def _trocr(self, image):
-        pixel_values = self.processor(images=image, return_tensors="pt").pixel_values
-        generated_ids = self.model.generate(pixel_values)
-        generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        generated_text = ""
+        img = image.copy()
+        for box in text_boxes(image):
+            x,y,w,h = box
+            rect = cv2.rectangle(im2, (x, y), (x + w, y + h), (0, 255, 0), 2)
+            cropped = im2[y:y + h, x:x + w]
+            pixel_values = self.processor(images=cropped, return_tensors="pt").pixel_values
+            generated_ids = self.model.generate(pixel_values)
+            del pixel_values
+            generated_text += self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
+            del generated_ids
+        del img
         return generated_text
 
     def extract_text(self, fpath):

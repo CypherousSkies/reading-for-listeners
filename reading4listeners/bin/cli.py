@@ -10,6 +10,7 @@ from datetime import timedelta
 from reading4listeners import lang_dict
 from reading4listeners.util.reader import Reader
 from reading4listeners.util.text import TextProcessor
+from reading4listeners.util.ocr import TrOCR
 
 os.environ["TOKENIZERS_PARALLELISM"] = "False"
 tag_remover = re.compile('<.*?>')
@@ -29,9 +30,11 @@ def get_ext(filename):
     return filename.split(".")[-1]
 
 
-def get_texts(sesspath, lang, skip_correction, skip_ocr):
+def get_texts(sesspath, lang, skip_correction, skip_ocr, use_TrOCR):
     setup_time = time.time()
     tp = TextProcessor(langs=lang)
+    if use_TrOCR:
+        trocr = TrOCR()
     setup_time = time.time()-setup_time
     files = [f for f in os.listdir(sesspath) if get_ext(f) in ['pdf', 'txt', 'muse']]
     run_times = {}
@@ -42,7 +45,10 @@ def get_texts(sesspath, lang, skip_correction, skip_ocr):
         print(f"> Loading {filename}")
         start = time.time()
         if get_ext(filename) == 'pdf':
-            text = tp.loadpdf(filename, sesspath, force=True, skip_correction=skip_correction, skip_ocr=skip_ocr)
+            if use_TrOCR:
+                text = trocr.extract_text(sesspath+filename)
+            else:
+                text = tp.loadpdf(filename, sesspath, force=True, skip_correction=skip_correction, skip_ocr=skip_ocr)
         elif get_ext(filename) == 'txt':
             with open(sesspath + filename, 'rt') as f:
                 text = f.read()
@@ -143,8 +149,9 @@ def main():
         nargs="?",
         const=True,
         default=False,
-        help="Use TrOCR instead of tesseract[+BERT] (NYI)",
+        help="Use TrOCR instead of tesseract[+BERT] (WIP)",
     )
+
     args = parser.parse_args()
     if args.list_langs:
         print(list(lang_dict.keys()))
@@ -154,13 +161,13 @@ def main():
         parser.parse_args(["-h"])
     if not os.path.isdir(args.out_path):
         os.mkdir(args.out_path)
-    run(args.in_path, args.out_path, args.lang, args.collect_time_data, args.max_mem, args.decoder_mult, args.skip_correction, args.skip_ocr)
+    run(args.in_path, args.out_path, args.lang, args.collect_time_data, args.max_mem, args.decoder_mult, args.skip_correction, args.skip_ocr,args.use_TrOCR)
     return
 
 
-def run(in_path, out_path, lang, time_data, max_mem, decoder_mult, skip_correction, skip_ocr):
+def run(in_path, out_path, lang, time_data, max_mem, decoder_mult, skip_correction, skip_ocr, use_TrOCR):
     start_time = time.time()
-    texts, files, word_counts, run_t_times = get_texts(in_path, lang, skip_correction, skip_ocr)
+    texts, files, word_counts, run_t_times = get_texts(in_path, lang, skip_correction, skip_ocr, use_TrOCR)
     audio_times, run_r_times = read_texts(texts, files, out_path, lang, max_mem, decoder_mult)
     time_taken = time.time() - start_time
     if time_data:
