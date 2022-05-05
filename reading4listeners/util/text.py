@@ -1,7 +1,6 @@
 import os
 import re
 from difflib import SequenceMatcher
-
 import nltk
 import torch
 from nltk.tag import pos_tag
@@ -10,6 +9,9 @@ from spellchecker import SpellChecker
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 from pdftotext import PDF
+import ebooklib
+from ebooklib import epub
+from bs4 import BeautifulSoup
 from reading4listeners import lang_dict
 
 
@@ -47,6 +49,20 @@ class TextProcessor:
         else:
             self.lang = lang_dict[langs][2]
         print("> BERT initialized")
+
+    def loadepub(self, filename, sesspath, skip_correction=True):
+        book = epub.read_epub(sesspath+filename)
+        items = list(book.get_items_of_type(ebooklib.ITEM_DOCUMENT))
+        #chapters = [c for c in items if 'chapter' in c.get_name()]
+        text0 = ""
+        for c in items:#chapters:
+            soup = BeautifulSoup(c.get_body_content(),'html.parser')
+            text = soup.text.replace('\n', ' ').strip()
+            text0 += text
+        if skip_correction:
+            return text0
+        else:
+            return self.correct_text(text0)
 
     # get and correct text
     def loadpdf(self, filename, sesspath, force=True, skip_correction=False, skip_ocr=False):

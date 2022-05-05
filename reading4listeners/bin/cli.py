@@ -36,7 +36,7 @@ def get_texts(sesspath, lang, skip_correction, skip_ocr, use_TrOCR):
     if use_TrOCR:
         trocr = TrOCR()
     setup_time = time.time()-setup_time
-    files = [f for f in os.listdir(sesspath) if get_ext(f) in ['pdf', 'txt', 'muse']]
+    files = [f for f in os.listdir(sesspath) if get_ext(f) in ['pdf', 'txt', 'muse','epub']]
     run_times = {}
     word_counts = {}
     texts = [[] for _ in files]
@@ -49,6 +49,8 @@ def get_texts(sesspath, lang, skip_correction, skip_ocr, use_TrOCR):
                 text = trocr.extract_text(sesspath+filename)
             else:
                 text = tp.loadpdf(filename, sesspath, force=True, skip_correction=skip_correction, skip_ocr=skip_ocr)
+        elif get_ext(filename) == 'epub':
+            text = tp.loadepub(filename, sesspath, skip_correction=skip_correction)
         elif get_ext(filename) == 'txt':
             with open(sesspath + filename, 'rt') as f:
                 text = f.read()
@@ -66,6 +68,8 @@ def get_texts(sesspath, lang, skip_correction, skip_ocr, use_TrOCR):
         word_counts[filename] = len(text.split(" "))
         texts[i] = text
     del tp
+    if use_TrOCR:
+        del TrOCR
     print("> Done text preprocessing")
     return texts, files, word_counts, run_times
 

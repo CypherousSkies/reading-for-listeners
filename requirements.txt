@@ -13,3 +13,5 @@ numpy
 scipy
 pdftotext
 sentencepiece
+ebooklib
+BeautifulSoup4
