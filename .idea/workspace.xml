@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance">
+    <list default="true" id="e55ddfa9-1d31-4f1b-8ef3-91da0bdf23bf" name="Changes" comment="little QOL updates">
+      <change afterPath="$PROJECT_DIR$/reading4listeners/bin/web.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reading4listeners/bin/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/bin/cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reading4listeners/util/ocr.py" beforeDir="false" afterPath="$PROJECT_DIR$/reading4listeners/util/ocr.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -255,7 +253,14 @@
       <option name="project" value="LOCAL" />
       <updated>1646864008624</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="little QOL updates">
+      <created>1651783270964</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1651783270964</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -291,6 +296,7 @@
     <MESSAGE value="updated readme" />
     <MESSAGE value="smol qol push, added a skip_ocr function because I've been using that a lot" />
     <MESSAGE value="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added barebones TrOCR functionality -- this is completely untested I just wanted to write it up while I had the chance" />
+    <MESSAGE value="little QOL updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="little QOL updates" />
   </component>
 </project>

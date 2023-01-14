@@ -1,4 +1,4 @@
-TTS==0.5.0
+TTS==0.8.0
 nltk
 psutil
 pydub
@@ -15,3 +15,5 @@ pdftotext
 sentencepiece
 ebooklib
 BeautifulSoup4
+streamlit
+cython
